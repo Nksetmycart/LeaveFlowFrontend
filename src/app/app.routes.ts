@@ -25,6 +25,8 @@ import { LeaveBalance } from './pages/leave-balance/leave-balance';
 import { AllLeaveRequests } from './pages/all-leave-requests/all-leave-requests';
 import { AllLeaveApprovals } from './pages/all-leave-approvals/all-leave-approvals';
 import { AssignLeaveBalance } from './pages/assign-leave-balance/assign-leave-balance';
+import { MyCompOff } from './pages/my-comp-offs/my-comp-offs';
+import { AllCompOffRequests } from './pages/all-compoff-requests/all-compoff-requests';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -35,6 +37,7 @@ export const routes: Routes = [
             { path: '', component: HomeComponent },
             { path: 'leave-requests', component: AllLeaveRequests},
             { path: 'leave-approvals', component: AllLeaveApprovals},
+            { path: 'comp-offs', component: AllCompOffRequests},
             { path: 'approval', canActivate: [roleGuard], data: { roles: ['SuperAdmin', 'HR', 'Manager'] }, component: LeaveApproval },
             {
                 path: 'employees', canActivate: [roleGuard], data: { roles: ['SuperAdmin', 'HR', 'Manager'] }, children: [
@@ -58,6 +61,7 @@ export const routes: Routes = [
             },
             { path: 'apply-leave', canActivate: [roleGuard], data: { roles: ['Employee', 'HR', 'Manager'] }, component: ApplyLeave },
             { path: 'my-leaves', canActivate: [roleGuard], data: { roles: ['Employee', 'HR', 'Manager'] }, component: MyLeaves },
+            { path: 'my-comp-offs', canActivate: [roleGuard], data: { roles: ['Employee', 'HR', 'Manager'] }, component: MyCompOff },
             { path: 'attendance', canActivate: [roleGuard], data: { roles: ['Employee', 'HR', 'Manager'] }, component: MyAttendance },
             {
                 path: 'roles', canActivate:[roleGuard], data: { roles: ['SuperAdmin', 'HR']},  children: [

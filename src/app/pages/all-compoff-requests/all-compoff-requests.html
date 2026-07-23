@@ -1,0 +1,164 @@
+<div class="container-fluid p-0 page-container animate-fade-in">
+  
+  <!-- Breadcrumb Navigation Actions Header -->
+  <div class="mb-4 d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <div>
+      <a [routerLink]="['/dashboard/approval']" class="text-decoration-none text-muted fs-8 fw-semibold d-inline-flex align-items-center gap-1 mb-1 text-uppercase tracking-wider">
+        <i class="bi bi-arrow-left"></i> Back to approvals
+      </a>
+      <h1 class="fw-bold text-dark h2 mb-0">All Comp Off Requests Audit Log</h1>
+    </div>
+    <span class="badge bg-light text-secondary border px-3 py-2 rounded-3 fs-8 fw-medium">
+      Read-Only Decision Registry
+    </span>
+  </div>
+
+  <!-- Main Table Grid Container Card -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+    <div class="table-responsive">
+      <table class="table mb-0 align-middle custom-table text-nowrap">
+        
+        <!-- Table Header Titles -->
+        <thead>
+          <tr>
+            <th scope="col" class="text-uppercase fw-bold text-muted table-header-cell ps-4">Applicant</th>
+            <th scope="col" class="text-uppercase fw-bold text-muted table-header-cell">Comp Off Details</th>
+            <th scope="col" class="text-uppercase fw-bold text-muted table-header-cell">Duration Timeline</th>
+            <th scope="col" class="text-uppercase fw-bold text-muted table-header-cell">Days Count</th>
+            <th scope="col" class="text-uppercase fw-bold text-muted table-header-cell">Approver</th>
+            <th scope="col" class="text-uppercase fw-bold text-muted table-header-cell">Manager Commentary</th>
+            <th scope="col" class="text-uppercase fw-bold text-muted table-header-cell pe-4">Final Outcome</th>
+          </tr>
+        </thead>
+
+        <!-- Table Body Matrix Content -->
+        <tbody>
+          <tr *ngFor="let record of compOffLogs">
+            
+            <!-- Applicant Column Block -->
+            <td class="py-3 px-4">
+              <div class="d-flex align-items-center">
+                <div class="avatar-circle bg-primary-subtle text-primary fw-bold me-2.5 d-flex align-items-center justify-content-center rounded-circle" style="width: 38px; height: 38px; font-size: 0.85rem; flex-shrink: 0;">
+                  {{ getInitials(record.employeeName) }}
+                </div>
+                <div>
+                  <span class="fw-semibold text-dark d-block" style="font-size: 0.92rem;">{{ record.employeeName }}</span>
+                  <small class="text-muted d-block mt-0.5" style="font-size: 0.74rem;">
+                    {{ record.employeeRole || record.role || 'Staff Profile' }}
+                  </small>
+                </div>
+              </div>
+            </td>
+            
+            <!-- Comp Off Type Display -->
+            <td class="px-4 fw-medium text-dark">{{ record.leaveType }}</td>
+            
+            <!-- Calendar Dates Duration Mapping -->
+            <td class="px-4 text-secondary" style="font-size: 0.85rem;">
+              <div class="font-monospace">
+                {{ record.startDate | date:'yyyy-MM-dd' }} <i class="bi bi-arrow-right mx-1 text-muted fs-8"></i> {{ record.endDate | date:'yyyy-MM-dd' }}
+              </div>
+              <div class="d-flex gap-1 mt-1 flex-wrap">
+                <span class="badge fw-medium px-2 py-0.5 rounded fs-9" [ngClass]="getSessionBadgeClass(record.startSession)">
+                  Start: {{ record.startSession }}
+                </span>
+                <span class="badge fw-medium px-2 py-0.5 rounded fs-9" [ngClass]="getSessionBadgeClass(record.endSession)">
+                  End: {{ record.endSession }}
+                </span>
+              </div>
+            </td>
+            
+            <!-- Day Span Output Display -->
+            <td class="px-4">
+              <span class="fw-bold text-dark-emphasis d-block">
+                {{ calculateCompOffDays(record.startDate, record.endDate, record.startSession, record.endSession) }}d
+              </span>
+            </td>
+
+            <!-- Approver Column Identity -->
+            <td class="px-4 text-dark fw-medium">
+              <div>
+                <span class="d-block text-dark fw-semibold" style="font-size: 0.92rem;">
+                  {{ record.approverName || 'System Administrator' }}
+                </span>
+                <small class="text-muted d-block mt-0.5" style="font-size: 0.74rem;">
+                  {{ record.approvarRole || 'Manager Role' }}
+                </small>
+              </div>
+            </td>
+            
+            <!-- Decision Commentary Note Field -->
+            <td class="px-4 text-secondary text-truncate max-w-comment-field" [title]="record.comment">
+              {{ record.comment ? record.comment : '—' }}
+            </td>
+            
+            <!-- Action Final Outcome Status Badge -->
+            <td class="px-4 pe-4">
+              <span class="badge px-2.5 py-1.5 rounded-pill fw-semibold text-uppercase style-badge-font" [ngClass]="getStatusClass(record.status)">
+                {{ record.status }}
+              </span>
+            </td>
+          </tr>
+
+          <!-- Dynamic Spinner Loading Skeleton View Row -->
+          <tr *ngIf="isLoading">
+            <td colspan="7" class="text-center py-5">
+              <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+              <span class="text-muted fs-7 fw-medium">Syncing transaction registry history datasets...</span>
+            </td>
+          </tr>
+
+          <!-- Fallback Visual Block -->
+          <tr *ngIf="!isLoading && compOffLogs.length === 0">
+            <td colspan="7" class="text-center py-5">
+              <div class="py-4 text-muted">
+                <i class="bi bi-clipboard-x display-6 d-block mb-2 text-secondary opacity-50"></i>
+                <span class="fs-7 fw-medium d-block">No finalized comp off decisions found.</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+
+    <!-- SYNCHRONIZED PAGINATION CONTROL PANEL FOOTER -->
+    <div *ngIf="!isLoading && compOffLogs && compOffLogs.length > 0" class="d-flex align-items-center justify-content-between px-4 py-3 bg-white border-top flex-wrap gap-3">
+      <div class="d-flex align-items-center gap-2 text-secondary fs-8">
+        <span>Show</span>
+        <select 
+          class="form-select form-select-sm shadow-none rounded-2 py-1 select-size-dropdown" 
+          name="compOffPageSizeSelect"
+          [(ngModel)]="pageSize" 
+          (ngModelChange)="onPageSizeChange($event)">
+          <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+        </select>
+        <span>records per page (Showing {{ startItemIndex }}-{{ endItemIndex }} of {{ totalItems }})</span>
+      </div>
+
+      <nav aria-label="Comp off audits catalogue navigation deck">
+        <ul class="pagination pagination-sm mb-0 gap-1 align-items-center">
+          <li class="page-item" [class.disabled]="page === 1">
+            <button type="button" class="page-link rounded-2 border shadow-none px-2.5 py-1.5" (click)="onPageChange(page - 1)">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+          </li>
+
+          <li class="page-item" *ngFor="let p of [].constructor(totalPages); let idx = index" [class.active]="page === (idx + 1)">
+            <button type="button" class="page-link rounded-2 border shadow-none px-3 py-1.5 fw-semibold" (click)="onPageChange(idx + 1)">
+              {{ idx + 1 }}
+            </button>
+          </li>
+
+          <li class="page-item" [class.disabled]="page >= totalPages || compOffLogs.length < pageSize">
+            <button type="button" class="page-link rounded-2 border shadow-none px-2.5 py-1.5" (click)="onPageChange(page + 1)">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+
+</div>

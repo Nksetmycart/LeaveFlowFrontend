@@ -1,0 +1,102 @@
+/* Core Layout Structure Configuration Rules */
+.page-container {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Specific component cascade inheritance styles mapping safely without any !important triggers */
+.page-container .custom-table thead tr th.table-header-cell {
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  padding: 1rem 0.75rem;
+  background-color: #f8fafc;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.custom-table tbody tr {
+  transition: background-color 0.15s ease;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.custom-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.custom-table tbody tr:hover {
+  background-color: rgba(248, 249, 250, 0.6);
+}
+
+.page-container .style-badge-font {
+  font-size: 0.65rem;
+  letter-spacing: 0.03em;
+}
+
+.custom-table tbody tr td.max-w-comment-field {
+  max-width: 260px;
+}
+
+.page-container .text-dark-emphasis {
+  color: #334155;
+}
+
+.page-container .fs-7 {
+  font-size: 0.8rem;
+}
+
+.page-container .fs-8 {
+  font-size: 0.75rem;
+}
+
+.page-container .fs-9 {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.page-container .badge.bg-info-subtle {
+  background-color: #e0f2fe;
+}
+
+.page-container .text-info-emphasis {
+  color: #0369a1;
+}
+
+/* Pagination Footer Specific Custom Overrides */
+.page-container .select-size-dropdown {
+  width: auto;
+  display: inline-block;
+  padding-right: 1.8rem;
+}
+
+.page-container .pagination .page-item .page-link {
+  color: #4a5568;
+  background-color: #ffffff;
+  border-color: #e2e8f0;
+  cursor: pointer;
+}
+
+.page-container .pagination .page-item .page-link:hover {
+  background-color: #f7fafc;
+  border-color: #cbd5e1;
+}
+
+.page-container .pagination .page-item.active .page-link {
+  color: #ffffff;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.page-container .pagination .page-item.disabled .page-link {
+  color: #cbd5e1;
+  pointer-events: none;
+  background-color: #ffffff;
+  border-color: #e2e8f0;
+}
+
+.animate-fade-in {
+  animation: approvalsFadeInEffect 0.25s ease-out forwards;
+}
+
+@keyframes approvalsFadeInEffect {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

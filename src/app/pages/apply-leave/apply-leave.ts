@@ -287,23 +287,7 @@ export class ApplyLeave implements OnInit {
           this.startDate = date;
           this.endDate = date;
         } else {
-          // Range Selection matching attendance component logic: skips weekends (0 and 6)
-          let current = new Date(this.startDate);
-          let validEnd: Date | null = null;
-          
-          while (current <= date) {
-            const dayOfWeek = current.getDay();
-            const checkTime = this.clearTime(current);
-            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
-            const isHoliday = this.holidaysCache.some(h => this.clearTime(new Date(h.date)) === checkTime);
-
-            if (!isWeekend && (this.appMode === 'compoff' || !isHoliday)) {
-              validEnd = new Date(current);
-            }
-            current.setDate(current.getDate() + 1);
-          }
-
-          this.endDate = date; // Allow picking range boundary; backend submission will cleanly filter out weekends/holidays.
+          this.endDate = date;
         }
       }
     }
@@ -338,6 +322,26 @@ export class ApplyLeave implements OnInit {
 
   private clearTime(date: Date): number {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  }
+
+  private getValidWorkingDaysRange(start: Date, end: Date): Date[] {
+    const validWorkingDays: Date[] = [];
+    let curr = new Date(start);
+    const last = new Date(end);
+
+    while (curr <= last) {
+      const checkTime = this.clearTime(curr);
+      const dayOfWeek = curr.getDay();
+      const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+      const isHoliday = this.holidaysCache.some(h => this.clearTime(new Date(h.date)) === checkTime);
+
+      if (!isWeekend && !isHoliday) {
+        validWorkingDays.push(new Date(curr));
+      }
+
+      curr.setDate(curr.getDate() + 1);
+    }
+    return validWorkingDays;
   }
 
   previousMonth(): void {
@@ -390,25 +394,8 @@ export class ApplyLeave implements OnInit {
     let adjustedStartDate = new Date(this.startDate);
     let adjustedEndDate = new Date(this.endDate);
 
-    // Filter out weekends (Saturday/Sunday) and holidays matching attendance component logic
     if (this.appMode === 'leave' && this.selectionMode === 'range' && !this.isSingleDaySelected) {
-      const validWorkingDays: Date[] = [];
-      let curr = new Date(this.startDate);
-      const last = new Date(this.endDate);
-
-      while (curr <= last) {
-        const checkTime = this.clearTime(curr);
-        const dayOfWeek = curr.getDay();
-        const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6); // 0 = Sun, 6 = Sat
-        const isHoliday = this.holidaysCache.some(h => this.clearTime(new Date(h.date)) === checkTime);
-
-        // Explicitly skip weekends and holidays from being added to payload working days
-        if (!isWeekend && !isHoliday) {
-          validWorkingDays.push(new Date(curr));
-        }
-
-        curr.setDate(curr.getDate() + 1);
-      }
+      const validWorkingDays = this.getValidWorkingDaysRange(this.startDate, this.endDate);
 
       if (validWorkingDays.length === 0) {
         this.isSubmitting = false;

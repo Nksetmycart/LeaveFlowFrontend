@@ -55,6 +55,8 @@ export class LeaveBalance implements OnInit {
         this.apiResponse = response;
         const rawData = response.data || [];
 
+        console.log(rawData);
+
         if (response.totalCount !== undefined) {
           this.totalItems = response.totalCount;
         } else if (response.totalItems !== undefined) {

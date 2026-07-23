@@ -189,6 +189,10 @@ export class LeaveService {
     return this.http.get<LeaveResponseList>(`${this.baseUrl}/LeaveRequest/${employeeId}?page=${page}&pageSize=${pageSize}`)
   }
 
+  GetCompOffRequestsByEmployee(employeeId: string, page: number, pageSize: number): Observable<LeaveResponseList> {
+    return this.http.get<LeaveResponseList>(`${this.baseUrl}/CompOff/${employeeId}?page=${page}&pageSize=${pageSize}`)
+  }
+
   CancelLeaveRequest(employeeId: string, leaveRequestId: string): Observable<Response> {
     return this.http.put<Response>(`${this.baseUrl}/LeaveRequest/${employeeId}/${leaveRequestId}`, null)
   }

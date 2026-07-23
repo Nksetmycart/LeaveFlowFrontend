@@ -77,6 +77,12 @@
       </a>
     </li>
     <li *ngIf="authService.hasRole(Role.Employee, Role.Manager, Role.HR)">
+      <a [routerLink]="['/dashboard',  'my-comp-offs']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary">
+        <i class="bi bi-list-check me-3 fs-5-custom"></i>
+        <span class="fw-medium">My Comp Offs</span>
+      </a>
+    </li>
+    <li *ngIf="authService.hasRole(Role.Employee, Role.Manager, Role.HR)">
       <a [routerLink]="['/dashboard',  'attendance']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary">
         <i class="bi bi-calendar3 me-3 fs-5-custom"></i>
         <span class="fw-medium">My Attendance</span>

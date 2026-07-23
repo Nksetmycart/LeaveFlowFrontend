@@ -55,7 +55,7 @@ export class Attendance implements OnInit {
       // Pipeline call sequences are loaded sequentially to preserve original execution order
       this.loadHolidayDataIndex(); 
     } else {
-      console.error("Attendance Component Error: 'employeeIdOverride' was not provided by the parent component.");
+      console.error("Attendance Component Error: 'EmployeeId' was not provided by the parent component.");
     }
   }
 

@@ -25,7 +25,7 @@ export class LeaveApproval implements OnInit {
   compOffRequests: any[] = [];
 
   selectedRequest: any | null = null;
-  selectedRequestType: 'leave' | 'compoff' | null = null; // Tracks origin category
+  selectedRequestType: 'leave' | 'compoff' | null = null;
   decisionComment = '';
 
   isLoading = false;
@@ -67,11 +67,7 @@ export class LeaveApproval implements OnInit {
     this.leaveService.GetAllPendingLeaveRequests(this.page, this.pageSize).subscribe({
       next: (response: LeaveResponseList) => {
         if (response.success && response.data) {
-          this.pendingRequests = response.data.filter(req => req.status?.toLowerCase() === 'pending').map((record: any) => ({
-            ...record,
-            startSession: record.startSession ? record.startSession.trim() : 'FullDay',
-            endSession: record.endSession ? record.endSession.trim() : 'FullDay'
-          }));
+          this.pendingRequests = response.data;
 
           const rawResponse = response as any;
           if (rawResponse.totalCount !== undefined) {
@@ -93,15 +89,9 @@ export class LeaveApproval implements OnInit {
       },
       error: (error) => {
         this.isLoading = false;
-
-        if (error?.status === 404) {
-          console.warn(`Fetch aborted (404 Not Found). Reverting pending layout trackers to: Page ${backupPage}, Size ${backupSize}`);
-          this.page = backupPage;
-          this.pageSize = backupSize;
-          this.triggerNotification("The requested page data does not exist. Navigation rolled back.", false);
-        } else {
-          this.triggerNotification(error?.error?.message || "Failed to sync pending leave allocations.", false);
-        }
+        console.log(error.error.message);
+        this.triggerNotification(error.error.message || "Leave Requests Not Found", false);
+        this.pendingRequests = [];
       }
     });
   }
@@ -111,11 +101,7 @@ export class LeaveApproval implements OnInit {
     this.leaveService.GetAllPendingCompOffRequests(this.page1, this.pageSize1).subscribe({
       next: (response: LeaveResponseList) => {
         if (response.success && response.data) {
-          this.compOffRequests = response.data.map((record: any) => ({
-            ...record,
-            startSession: record.startSession ? record.startSession.trim() : 'FullDay',
-            endSession: record.endSession ? record.endSession.trim() : 'FullDay'
-          }));
+          this.compOffRequests = response.data;
 
           const rawResponse = response as any;
           if (rawResponse.totalCount !== undefined) {
@@ -132,14 +118,10 @@ export class LeaveApproval implements OnInit {
         }
       },
       error: (error) => {
-        console.error("Failed to sync structural comp off requests logs:", error);
-
-        if (error?.status === 404) {
-          console.warn(`Fetch aborted (404 Not Found). Reverting comp off layout trackers to: Page ${backupPage1}, Size ${backupSize1}`);
-          this.page1 = backupPage1;
-          this.pageSize1 = backupSize1;
-          this.triggerNotification("No records available on the requested page timeline view.", false);
-        }
+        this.isLoading = false;
+        console.log(error.error.message);
+        this.triggerNotification(error.error.message || "Comp Off Requests Not Found", false);
+        this.compOffRequests = [];
       }
     });
   }
@@ -178,7 +160,6 @@ export class LeaveApproval implements OnInit {
     this.loadCompOffRequests(prevPage1, prevSize1);
   }
 
-  // --- PAGINATION ARITHMETIC GETTERS ---
   get totalPagesPending(): number {
     if (this.totalItemsPending <= this.pendingRequests.length && this.page === 1) return 1;
     return Math.ceil(this.totalItemsPending / this.pageSize) || 1;
@@ -293,7 +274,6 @@ export class LeaveApproval implements OnInit {
       comment: this.decisionComment
     };
 
-    // Temporary interception branch for Comp Off requests
     if (this.selectedRequestType === 'compoff') {
       console.log("Comp Off Approve action called temporarily for ID:", this.selectedRequest.id, "Comment:", this.decisionComment);
       this.leaveService.ApproveCompOff(this.approvarId, dto).subscribe({
