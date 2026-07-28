@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { API_V0_BASE_URL } from '../config/api-config';
 
 export enum RenewalType {
   None = 'None',
@@ -47,7 +48,7 @@ export interface UpdateLeaveTypeDto {
 
 export interface ApplyLeaveRequestDto {
   leaveTypeId: string;
-  startDate: string;  
+  startDate: string;
   endDate: string;
   startSession: number;  // Evaluates to 0 (Full), 1 (First Half), or 2 (Second Half)
   endSession: number;  // Evaluates to 0 (Full), 1 (First Half), or 2 (Second Half)
@@ -156,7 +157,8 @@ export interface Response {
 })
 export class LeaveService {
 
-  private baseUrl = 'https://localhost:7241/api/v0';
+  private baseUrl = API_V0_BASE_URL;
+
 
   constructor(private http: HttpClient) { }
 

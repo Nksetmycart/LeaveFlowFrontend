@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { API_V0_BASE_URL } from '../config/api-config';
 
 // Structural replica mapping your C# CreateHolidayDto class exactly
 export interface CreateHolidayDto {
@@ -36,25 +37,26 @@ export interface UpdateHolidayDto {
   providedIn: 'root',
 })
 export class HolidayService {
-  private apiUrl = 'https://localhost:7241/api/v0/Holiday';
+  private baseUrl = `${API_V0_BASE_URL}/Holiday`;
+
 
   constructor(private http: HttpClient) { }
 
   CreateHoliday(data: CreateHolidayDto): Observable<HolidayResponse> {
     console.log("Submitting Holiday Payload:", data);
-    return this.http.post<HolidayResponse>(this.apiUrl, data);
+    return this.http.post<HolidayResponse>(this.baseUrl, data);
   }
 
   GetHolidays(): Observable<HolidaysList> {
-    return this.http.get<HolidaysList>(this.apiUrl);
+    return this.http.get<HolidaysList>(this.baseUrl);
   }
 
   UpdateHolidayById(holidayId: string, data: UpdateHolidayDto): Observable<HolidayResponse> {
-    return this.http.put<HolidayResponse>(`${this.apiUrl}/${holidayId}`, data)
+    return this.http.put<HolidayResponse>(`${this.baseUrl}/${holidayId}`, data)
   }
   
   DeleteHolidayById(holidayId: string): Observable<HolidayResponse> {
-    return this.http.delete<HolidayResponse>(`${this.apiUrl}/${holidayId}`)
+    return this.http.delete<HolidayResponse>(`${this.baseUrl}/${holidayId}`)
   }
 
 }

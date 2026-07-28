@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class Login {
   loginUserModel: any = {};
+  isSubmitting = false;
 
   // Notification Banner State Properties
   notification = {
@@ -28,6 +29,8 @@ export class Login {
       return;
     }
 
+    this.isSubmitting = true;
+
     this.service.loginUser(this.loginUserModel).subscribe({
       next: (response: UserResponse) => {
         console.log("Login Successful:", response);
@@ -37,12 +40,17 @@ export class Login {
           "user",
           JSON.stringify(response.data)
         );
-        
-        this.router.navigate([`dashboard`]);
+
+        this.router.navigate(['dashboard']).then(() => {
+          this.isSubmitting = false;
+        }).catch(() => {
+          this.isSubmitting = false;
+        });
       },
       error: (err: any) => {
         console.error("Error Login User: ", err, this.loginUserModel);
-        
+        this.isSubmitting = false;
+
         // Dynamic fallback extracts backend response message or message array property cleanly
         const backendMessage = err?.error?.message || err?.error || err?.message || "An unexpected error occurred.";
         this.triggerToastNotification(backendMessage);

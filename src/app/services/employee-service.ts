@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { API_V0_BASE_URL } from '../config/api-config';
 // Optional: Import your auth service to resolve the active employee identifier
 // import { AuthService } from './auth.service'; 
 
@@ -45,13 +46,13 @@ export interface SingleEmployeeResponse {
   data: EmployeeResponseDto;
 }
 
-export interface UpdateEmployeeDto{
+export interface UpdateEmployeeDto {
   departmentId: string;
   roleId: string;
   name: string;
   email: string;
   phoneNumber: string;
-  address: string; 
+  address: string;
   joiningDate: string;
 }
 
@@ -64,47 +65,48 @@ export interface DeleteEmployeeResponse {
   providedIn: 'root',
 })
 export class EmployeeService {
-  private apiUrl = 'https://localhost:7241/api/v0/Employee';
+
+  private baseUrl = `${API_V0_BASE_URL}/Employee`;
 
   private employeeData: EmployeeResponseDto | null = null;
 
   constructor(
     private http: HttpClient,
-  ) {}
+  ) { }
 
   setEmployee(employee: EmployeeResponseDto) {
     this.employeeData = employee;
   }
 
-  getEmployee(): EmployeeResponseDto |  null{
+  getEmployee(): EmployeeResponseDto | null {
     return this.employeeData;
   }
 
-  clearEmployee(): void{
+  clearEmployee(): void {
     this.employeeData = null;
   }
 
   CreateEmployee(data: CreateEmployeeDto): Observable<any> {
     console.log("Provisioning new employee record entry:", data);
-    return this.http.post<any>(this.apiUrl, data);
+    return this.http.post<any>(this.baseUrl, data);
   }
 
   GetEmployeeById(employeeId?: string): Observable<SingleEmployeeResponse> {
     const targetId = employeeId || 'fetch-fallback-guid';
-    
+
     console.log(`Requesting structural information map profile for identity: ${targetId}`);
-    return this.http.get<SingleEmployeeResponse>(`${this.apiUrl}/${targetId}`);
+    return this.http.get<SingleEmployeeResponse>(`${this.baseUrl}/${targetId}`);
   }
 
   GetEmployees(page: number, pageSize: number): Observable<EmployeeListResponse> {
-    return this.http.get<EmployeeListResponse>(`${this.apiUrl}?page=${page}&pageSize=${pageSize}`);
+    return this.http.get<EmployeeListResponse>(`${this.baseUrl}?page=${page}&pageSize=${pageSize}`);
   }
 
-  UpdateEmployeeById( data: UpdateEmployeeDto, employeeId: string): Observable<SingleEmployeeResponse> {
-    return this.http.put<SingleEmployeeResponse>(`${this.apiUrl}/${employeeId}`, data)
+  UpdateEmployeeById(data: UpdateEmployeeDto, employeeId: string): Observable<SingleEmployeeResponse> {
+    return this.http.put<SingleEmployeeResponse>(`${this.baseUrl}/${employeeId}`, data)
   }
 
   DeleteEmployeeById(employeeId: string): Observable<DeleteEmployeeResponse> {
-    return this.http.delete<DeleteEmployeeResponse>(`${this.apiUrl}/${employeeId}`)
+    return this.http.delete<DeleteEmployeeResponse>(`${this.baseUrl}/${employeeId}`)
   }
 }

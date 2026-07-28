@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { API_V0_BASE_URL } from '../config/api-config';
 
 export interface EmployeeDashboardDto {
   success: boolean;
@@ -38,7 +39,7 @@ export interface AdminDashboardDto {
       createdAt: string;
       updatedAt: string;
     }>;
-   LeaveBalances: Array<{
+    LeaveBalances: Array<{
       name: string;
       usedLeaves: number;
       balance: string;
@@ -61,9 +62,9 @@ export interface ApprovalStatusCount {
   providedIn: 'root',
 })
 export class DashboardService {
-  private baseUrl = 'https://localhost:7241/api/v0/Dashboard';
+  private baseUrl = `${API_V0_BASE_URL}/Dashboard`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   GetEmployeeDashboardData(employeeId: string): Observable<EmployeeDashboardDto> {
     return this.http.get<EmployeeDashboardDto>(`${this.baseUrl}/employee/${employeeId}`);

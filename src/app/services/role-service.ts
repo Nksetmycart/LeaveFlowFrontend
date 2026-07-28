@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { API_V0_BASE_URL } from '../config/api-config';
 
 export class AddRoleDto {
   name!: string;
@@ -39,25 +40,25 @@ export interface DeleteRoleResponse{
 })
 export class RoleService {
   // Correct base target URL endpoint configuration
-  private apiUrl = 'https://localhost:7241/api/v0/Role';
+  private baseUrl = `${API_V0_BASE_URL}/Role`;
 
   constructor(private http: HttpClient) { }
 
   // Methods now properly live inside the Injectable service container
   CreateRole(data: AddRoleDto): Observable<RoleResponse> {
     console.log("Submitting custom role mapping data:", data);
-    return this.http.post<RoleResponse>(this.apiUrl, data);
+    return this.http.post<RoleResponse>(this.baseUrl, data);
   }
 
   GetRoles(): Observable<GetRolesList> {
-    return this.http.get<GetRolesList>(this.apiUrl);
+    return this.http.get<GetRolesList>(this.baseUrl);
   }
 
   UpdateRoleById(roleId: string, data: UpdateRoleDto): Observable<RoleResponse> {
-    return this.http.put<RoleResponse>(`${this.apiUrl}/${roleId}`, data)
+    return this.http.put<RoleResponse>(`${this.baseUrl}/${roleId}`, data)
   }
 
   DeleteRoleById(roleId: string): Observable<DeleteRoleResponse>{
-    return this.http.delete<DeleteRoleResponse>(`${this.apiUrl}/${roleId}`)
+    return this.http.delete<DeleteRoleResponse>(`${this.baseUrl}/${roleId}`)
   }
 }

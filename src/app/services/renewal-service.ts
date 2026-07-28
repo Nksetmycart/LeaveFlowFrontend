@@ -1,12 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { API_V0_BASE_URL } from '../config/api-config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RenewalService {
-  private baseUrl = 'https://localhost:7241/api/v0';
+  private baseUrl = API_V0_BASE_URL;
+
 
   constructor(private http: HttpClient) { }
 
@@ -17,7 +19,7 @@ export class RenewalService {
   checkMonthlyRenewal(): void {
 
     const today = new Date();
-    if (today.getDate() !== 1){
+    if (today.getDate() !== 1) {
       console.log("Date is not 1st of the month.")
       return;
     }

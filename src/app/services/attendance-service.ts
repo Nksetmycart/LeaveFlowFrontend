@@ -1,30 +1,31 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { API_V0_BASE_URL } from '../config/api-config';
 
 @Injectable({
   providedIn: 'root',
 })
 
 export class AttendanceService {
-  private apiUrl = 'https://localhost:7241/api/v0/Attendance';
+  private baseUrl = `${API_V0_BASE_URL}/Attendance`;
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient) { }
 
   GetAttendanceByEmployee(employeeId?: string): Observable<AttendanceListResponse> {
-    return this.http.get<AttendanceListResponse>(`${this.apiUrl}/${employeeId}`);
+    return this.http.get<AttendanceListResponse>(`${this.baseUrl}/${employeeId}`);
   }
 
-  MarkAttendance(data: MarkAttendance, employeeId?: string):  Observable<MarkAttendanceResponse> {
-    return this.http.post<MarkAttendanceResponse>(`${this.apiUrl}/${employeeId}`,data);
+  MarkAttendance(data: MarkAttendance, employeeId?: string): Observable<MarkAttendanceResponse> {
+    return this.http.post<MarkAttendanceResponse>(`${this.baseUrl}/${employeeId}`, data);
   }
 
   MarkBulkAttendance(data: MarkAttendance[], employeeId?: string): Observable<MarkAttendanceListResponse> {
-    return this.http.post<MarkAttendanceListResponse>(`${this.apiUrl}/${employeeId}/bulk`, data);
+    return this.http.post<MarkAttendanceListResponse>(`${this.baseUrl}/${employeeId}/bulk`, data);
   }
 }
 
-export interface MarkAttendance{
+export interface MarkAttendance {
   attendanceDate: string;
   status: string;
 }
@@ -40,7 +41,7 @@ export interface MarkAttendanceListResponse {
   data: string[];
 }
 
-export interface AttendanceListResponse{
+export interface AttendanceListResponse {
   success: boolean;
   message: string;
   data: Array<{

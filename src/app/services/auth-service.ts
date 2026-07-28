@@ -1,16 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { API_V0_BASE_URL } from '../config/api-config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
 
-  loginUser(data: LoginUser): Observable<UserResponse>{
+  private baseUrl = `${API_V0_BASE_URL}/Auth/login`;
+
+
+  constructor(private http: HttpClient) { }
+
+  loginUser(data: LoginUser): Observable<UserResponse> {
     console.log("LoginData", data)
-    return this.http.post<UserResponse>('https://localhost:7241/api/v0/Auth/login',data);
+    return this.http.post<UserResponse>(`${this.baseUrl}`, data, { withCredentials: true });
   }
 
   getUser() {
@@ -53,7 +58,7 @@ export class LoginUser {
   password!: string;
 }
 
-export class UserResponse{
+export class UserResponse {
   data!: {
     employeeId: string,
     name: string;

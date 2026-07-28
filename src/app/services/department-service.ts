@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { API_V0_BASE_URL } from '../config/api-config';
 
 export interface DeleteDepartmentResponse {
   success: boolean;
@@ -27,28 +28,33 @@ export interface DepartmentResponse {
   providedIn: 'root',
 })
 export class DepartmentService {
+
+  private baseUrl = `${API_V0_BASE_URL}/Department`;
+
+
+
   constructor(private http: HttpClient) {}
 
   CreateDepartment(data: CreateDepartment): Observable<DepartmentResponse> {
     console.log("CreateDepartmentData: ",data)
     return this.http.post<DepartmentResponse>(
-      'https://localhost:7241/api/v0/Department',
+      `${this.baseUrl}`,
       data,
     );
   }
 
   GetAllDepartments(): Observable<GetDepartmentsList> {
     return this.http.get<GetDepartmentsList> (
-      'https://localhost:7241/api/v0/Department'
+      `${this.baseUrl}`
     );
   }
 
   DeleteDepartmentById(departmentId: string): Observable<DeleteDepartmentResponse> {
-    return this.http.delete<DeleteDepartmentResponse> (`https://localhost:7241/api/v0/Department/${departmentId}`)
+    return this.http.delete<DeleteDepartmentResponse> (`${this.baseUrl}/${departmentId}`)
   }
 
   UpdateDepartmentById(data: UpdateDepartmentDto, departmentId: string): Observable<DepartmentResponse> {
-    return this.http.put<DepartmentResponse> (`https://localhost:7241/api/v0/Department/${departmentId}`, data);
+    return this.http.put<DepartmentResponse> (`${this.baseUrl}/${departmentId}`, data);
   }
 
 }
