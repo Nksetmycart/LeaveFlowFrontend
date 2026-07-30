@@ -1,5 +1,21 @@
-<div class="container-fluid p-0 page-container animate-fade-in">
+<div class="container-fluid p-0 page-container animate-fade-in position-relative">
   
+  <!-- TOP NOTIFICATION POPUP BANNER -->
+  <div *ngIf="apiMessage" 
+       class="top-notification-toast shadow-lg rounded-4 p-3 mb-4 animate-slide-down d-flex align-items-center justify-content-between gap-3"
+       [ngClass]="apiMessageType === 'success' ? 'bg-success text-white border-success' : 'bg-danger text-white border-danger'">
+    <div class="d-flex align-items-center gap-3">
+      <div class="rounded-circle bg-white bg-opacity-25 p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; min-width: 40px;">
+        <i class="bi" [ngClass]="apiMessageType === 'success' ? 'bi-check-circle-fill fs-5' : 'bi-exclamation-octagon-fill fs-5'"></i>
+      </div>
+      <div>
+        <h6 class="fw-bold mb-0">{{ apiMessageType === 'success' ? 'Success' : 'Attention Required' }}</h6>
+        <p class="fs-7 mb-0 text-white-50 text-wrap-pretty">{{ apiMessage }}</p>
+      </div>
+    </div>
+    <button type="button" (click)="dismissApiError()" class="btn-close btn-close-white shadow-none m-0" aria-label="Close"></button>
+  </div>
+
   <!-- Header Title & Controls Section -->
   <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
     <div>
@@ -49,24 +65,6 @@
         <button (click)="previousMonth()" class="btn btn-light btn-sm rounded-circle border shadow-none"><i class="bi bi-chevron-left"></i></button>
         <span class="fw-bold text-dark fs-6 text-nowrap" style="min-width: 90px; text-align: center;">{{ currentMonthName }} {{ currentYear }}</span>
         <button (click)="nextMonth()" class="btn btn-light btn-sm rounded-circle border shadow-none"><i class="bi bi-chevron-right"></i></button>
-      </div>
-    </div>
-  </div>
-
-  <!-- TRUE FLOATING MODAL ERROR POPUP OVERLAY -->
-  <div *ngIf="apiErrorMessage" class="custom-modal-overlay animate-fade-in mb-4">
-    <div class="custom-modal-card border-start border-danger border-4 shadow-lg p-4 rounded-4 bg-white text-center">
-      <div class="d-flex flex-column align-items-center gap-3">
-        <div class="rounded-circle bg-danger-subtle p-3 d-flex align-items-center justify-content-center text-danger" style="width: 60px; height: 60px;">
-          <i class="bi bi-exclamation-octagon-fill fs-3"></i>
-        </div>
-        <div>
-          <h4 class="fw-bold text-dark h5 mb-2">Attention Required</h4>
-          <p class="text-secondary fs-7 mb-0 text-wrap-pretty px-2">{{ apiErrorMessage }}</p>
-        </div>
-        <button type="button" (click)="dismissApiError()" class="btn btn-danger btn-sm w-100 rounded-3 py-2 fw-semibold shadow-none border-0 text-white mt-2 transition-all">
-          Acknowledge
-        </button>
       </div>
     </div>
   </div>
@@ -123,14 +121,11 @@
             </span>
           </div>
 
-          <!-- DYNAMIC LABELS ACTIONS BOTTOM STACK BLOCK (Includes tight structural element spacing gaps) -->
           <div class="mt-2 w-100 d-flex flex-column gap-1">
-            <!-- Renders official database holiday tags cleanly using your custom layout chip -->
             <span *ngIf="cell.isHoliday" class="holiday-label-chip text-truncate d-block" [title]="cell.holidayName">
               {{ cell.holidayName }}
             </span>
 
-            <!-- Original Internal Attendance Badge Stream Display -->
             <div *ngIf="attendanceRecords[getDateKey(cell.date)]" [class]="getRecordBadgeClass(attendanceRecords[getDateKey(cell.date)])">
               {{ getReadableStatusName(attendanceRecords[getDateKey(cell.date)]) }}
             </div>

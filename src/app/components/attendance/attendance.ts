@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input } from '@angular/core';
 import { AttendanceService, MarkAttendance } from '../../services/attendance-service';
-import { HolidayService, HolidaysList } from '../../services/holiday-service'; // Added Holiday Service Import
+import { HolidayService, HolidaysList } from '../../services/holiday-service';
 
 interface CalendarCell {
   date: Date;
   isCurrentMonth: boolean;
   isFuture: boolean;
-  isHoliday?: boolean;      // Added tracking property flag
-  holidayName?: string;     // Added tracking property value name
+  isHoliday?: boolean;
+  holidayName?: string;
 }
 
 type SelectionMode = 'single' | 'range';
@@ -28,7 +28,7 @@ export class Attendance implements OnInit {
   calendarCells: CalendarCell[] = [];
   weekDays: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   attendanceList: any[] = [];
-  holidaysCache: any[] = []; // Added database holidays collection array cache container
+  holidaysCache: any[] = [];
 
   selectionMode: SelectionMode = 'single';
   selectedDates: Set<string> = new Set<string>();
@@ -39,34 +39,48 @@ export class Attendance implements OnInit {
   employeeId!: string;
 
   activeSelectedStatus: AttendanceType = 'Working';
-  apiErrorMessage: string | null = null; 
+  
+  // --- Notification State Properties ---
+  apiMessage: string | null = null;
+  apiMessageType: 'error' | 'success' = 'error';
 
   attendanceRecords: { [key: string]: AttendanceType } = {};
   stats = { working: 0, leave: 0, halfDays: 0, totalHours: 0.0 };
 
   constructor(
     private attendanceService: AttendanceService,
-    private holidayService: HolidayService // Injected HolidayService securely
+    private holidayService: HolidayService
   ) {}
 
   ngOnInit(): void {
     if (this.employeeIdOverride) {
       this.employeeId = this.employeeIdOverride;
-      // Pipeline call sequences are loaded sequentially to preserve original execution order
       this.loadHolidayDataIndex(); 
     } else {
       console.error("Attendance Component Error: 'EmployeeId' was not provided by the parent component.");
     }
   }
 
-  // --- NEW HOOK ADDITION: Fetches public holidays list database index entries ---
+  showNotification(message: string, type: 'error' | 'success' = 'error'): void {
+    this.apiMessage = message;
+    this.apiMessageType = type;
+    
+    // Auto-dismiss success notifications after 4 seconds
+    if (type === 'success') {
+      setTimeout(() => {
+        if (this.apiMessage === message) {
+          this.dismissApiError();
+        }
+      }, 4000);
+    }
+  }
+
   loadHolidayDataIndex(): void {
     this.holidayService.GetHolidays().subscribe({
       next: (response) => {
         if (response && response.data) {
           this.holidaysCache = response.data;
         }
-        // Always executes core methods downstream regardless of result parameters to prevent breaking baseline view states
         this.generateCalendar();
         this.loadAttendanceList();
       },
@@ -78,7 +92,6 @@ export class Attendance implements OnInit {
     });
   }
 
-  // --- GETTERS RESOLVING TEMPLATE ERRORS ---
   get currentMonthName(): string {
     return this.currentDate.toLocaleString('default', { month: 'long' });
   }
@@ -88,14 +101,14 @@ export class Attendance implements OnInit {
   }
 
   dismissApiError(): void {
-    this.apiErrorMessage = null;
+    this.apiMessage = null;
   }
 
   loadAttendanceList(): void {
     this.attendanceService.GetAttendanceByEmployee(this.employeeId).subscribe({
       next: (response) => {
         if (response.success) {
-          this.apiErrorMessage = null;
+          this.apiMessage = null;
           this.attendanceList = response.data;
           
           this.attendanceRecords = {};
@@ -126,12 +139,12 @@ export class Attendance implements OnInit {
 
           this.recalculateDashboardStats();
         } else {
-          this.apiErrorMessage = response.message || 'No attendance records found for this employee.';
+          this.showNotification(response.message || 'No attendance records found for this employee.', 'error');
         }
       },
       error: (error) => {
         console.error("Error pulling database profiles:", error);
-        this.apiErrorMessage = 'A network exception occurred while fetching attendance profiles.';
+        this.showNotification('A network exception occurred while fetching attendance profiles.', 'error');
       }
     });
   }
@@ -156,8 +169,6 @@ export class Attendance implements OnInit {
 
     const createCell = (dateObj: Date, isCurrent: boolean): CalendarCell => {
       const keyStr = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
-      
-      // Scans database records for matching date parameters context tracking metrics
       const matchedHoliday = this.holidaysCache.find(h => h.date && h.date.split('T')[0] === keyStr);
 
       return {
@@ -186,12 +197,11 @@ export class Attendance implements OnInit {
 
   handleCellSelection(date: Date): void {
     const dateKey = this.getDateKey(date);
-    this.apiErrorMessage = null; 
+    this.apiMessage = null; 
 
-    // BLOCKS MANIPULATION INTERCEPTOR: Rejects changes over locked official corporate holidays records bounds
     const matchedCell = this.calendarCells.find(c => this.getDateKey(c.date) === dateKey);
     if (matchedCell?.isHoliday) {
-      this.apiErrorMessage = `Selection Refused: Cannot adjust attendance parameters over official holiday "${matchedCell.holidayName}".`;
+      this.showNotification(`Selection Refused: Cannot adjust attendance parameters over official holiday "${matchedCell.holidayName}".`, 'error');
       return;
     }
 
@@ -237,7 +247,6 @@ export class Attendance implements OnInit {
   updateSelectedDaysStatus(status: AttendanceType): void {
     this.activeSelectedStatus = status;
     this.selectedDates.forEach(key => {
-      // Prevents updating historical database indicators or active public holiday fields indices
       const cellCheck = this.calendarCells.find(c => this.getDateKey(c.date) === key);
       if (!this.backendAttendanceDates.has(key) && !cellCheck?.isHoliday) {
         this.attendanceRecords[key] = status;
@@ -263,7 +272,6 @@ export class Attendance implements OnInit {
     while (current <= this.rangeEnd) {
       const currentTimestamp = this.clearTime(current);
       const key = this.getDateKey(current);
-      
       const cellCheck = this.calendarCells.find(c => this.getDateKey(c.date) === key);
 
       if (
@@ -271,7 +279,7 @@ export class Attendance implements OnInit {
         current.getDay() !== 0 && 
         current.getDay() !== 6 && 
         !this.backendAttendanceDates.has(key) &&
-        !cellCheck?.isHoliday // Bypass range selection assignments across mapped public holidays boundaries
+        !cellCheck?.isHoliday 
       ) {
         this.attendanceRecords[key] = this.activeSelectedStatus;
         this.selectedDates.add(key);
@@ -316,7 +324,7 @@ export class Attendance implements OnInit {
     this.rangeStart = null;
     this.rangeEnd = null;
     this.activeSelectedStatus = 'Working';
-    this.apiErrorMessage = null;
+    this.apiMessage = null;
     this.clearTemporarySelections();
     this.recalculateDashboardStats();
   }
@@ -341,7 +349,7 @@ export class Attendance implements OnInit {
       case 'Leave': return 'status-pill bg-wfh';       
       case 'FirstHalf':
       case 'SecondHalf': 
-        return 'status-pill bg-half';     
+        return 'status-pill bg-half';    
       default: return 'status-pill bg-light text-muted';
     }
   }
@@ -384,7 +392,7 @@ export class Attendance implements OnInit {
     });
 
     if (updatesList.length === 0) {
-      this.apiErrorMessage = 'No new selections found to record.';
+      this.showNotification('No new selections found to record.', 'error');
       return;
     }
 
@@ -399,15 +407,16 @@ export class Attendance implements OnInit {
       this.attendanceService.MarkAttendance(payload, this.employeeId).subscribe({
         next: (response) => {
           if (response.success) {
+            this.showNotification('Attendance recorded successfully!', 'success');
             this.clearSelection();
             this.loadAttendanceList();
           } else {
-            this.apiErrorMessage = response.message || 'Failed to submit attendance log entry.';
+            this.showNotification(response.message || 'Failed to submit attendance log entry.', 'error');
           }
         },
         error: (err) => {
           console.error(err);
-          this.apiErrorMessage = 'An error occurred while transmitting your attendance records.';
+          this.showNotification('An error occurred while transmitting your attendance records.', 'error');
         }
       });
     } 
@@ -420,15 +429,16 @@ export class Attendance implements OnInit {
       this.attendanceService.MarkBulkAttendance(payloadBulk, this.employeeId).subscribe({
         next: (response) => {
           if (response.success) {
+            this.showNotification('Bulk attendance recorded successfully!', 'success');
             this.clearSelection();
             this.loadAttendanceList();
           } else {
-            this.apiErrorMessage = response.message || 'Failed to submit bulk allocation array records.';
+            this.showNotification(response.message || 'Failed to submit bulk allocation array records.', 'error');
           }
         },
         error: (err) => {
           console.error(err);
-          this.apiErrorMessage = 'An error occurred while transmitting your bulk attendance records.';
+          this.showNotification('An error occurred while transmitting your bulk attendance records.', 'error');
         }
       });
     }
