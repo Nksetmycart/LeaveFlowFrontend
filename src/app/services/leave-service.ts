@@ -200,7 +200,7 @@ export class LeaveService {
   }
 
   GetAllLeaveRequests(page: number, pageSize: number): Observable<LeaveResponseList> {
-    return this.http.get<LeaveResponseList>(`${this.baseUrl}/LeaveRequest?page=${page}&pageSize=${pageSize}`)
+    return this.http.get<LeaveResponseList>(`${this.baseUrl}/LeaveRequest/all?page=${page}&pageSize=${pageSize}`)
   }
 
   GetAllCompOffRequests(page: number, pageSize: number): Observable<LeaveResponseList> {
@@ -208,7 +208,15 @@ export class LeaveService {
   }
 
   GetAllPendingLeaveRequests(page: number, pageSize: number): Observable<LeaveResponseList> {
-    return this.http.get<LeaveResponseList>(`${this.baseUrl}/LeaveRequest?status=Pending&page=${page}&pageSize=${pageSize}`)
+    return this.http.get<LeaveResponseList>(`${this.baseUrl}/LeaveRequest/all?status=Pending&page=${page}&pageSize=${pageSize}`)
+  }
+
+  GetEmployeesPendingLeaveRequests(page: number, pageSize: number): Observable<LeaveResponseList> {
+    return this.http.get<LeaveResponseList>(`${this.baseUrl}/LeaveRequest/employees?status=Pending&page=${page}&pageSize=${pageSize}`)
+  }
+
+  GetEmployeesAndManagersPendingLeaveRequests(page: number, pageSize: number): Observable<LeaveResponseList> {
+    return this.http.get<LeaveResponseList>(`${this.baseUrl}/LeaveRequest/employeesAndManagers?status=Pending&page=${page}&pageSize=${pageSize}`)
   }
 
   GetAllPendingCompOffRequests(page: number, pageSize: number): Observable<LeaveResponseList> {

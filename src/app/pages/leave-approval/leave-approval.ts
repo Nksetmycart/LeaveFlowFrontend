@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LeaveService, LeaveResponseList, ApprovalDto } from '../../services/leave-service';
-import { AuthService } from '../../services/auth-service';
+import { AuthService, Role } from '../../services/auth-service';
 import { RouterLink } from '@angular/router';
 
 interface ToastConfig {
@@ -20,6 +20,8 @@ interface ToastConfig {
 })
 export class LeaveApproval implements OnInit {
   approvarId!: string;
+  approvarRole!: string;
+  Role = Role;
 
   pendingRequests: any[] = [];
   compOffRequests: any[] = [];
@@ -53,6 +55,8 @@ export class LeaveApproval implements OnInit {
 
   ngOnInit(): void {
     this.approvarId = this.authService.getEmployeeId();
+    this.approvarRole = this.authService.getRole();
+    console.log("Role: ", this.approvarRole);
     this.loadAllApprovalDashboardMetrics();
   }
 
@@ -64,7 +68,28 @@ export class LeaveApproval implements OnInit {
 
   // --- SAFE API WRAPPER FOR PENDING REQUESTS ---
   loadRequestList(backupPage: number = this.page, backupSize: number = this.pageSize): void {
-    this.leaveService.GetAllPendingLeaveRequests(this.page, this.pageSize).subscribe({
+
+    let request$;
+
+    switch (this.approvarRole) {
+      case Role.SuperAdmin:
+        request$ = this.leaveService.GetAllPendingLeaveRequests(this.page, this.pageSize);
+        break;
+
+      case Role.HR:
+        request$ = this.leaveService.GetEmployeesAndManagersPendingLeaveRequests(this.page, this.pageSize);
+        break;
+
+      case Role.Manager:
+        request$ = this.leaveService.GetEmployeesPendingLeaveRequests(this.page, this.pageSize);
+        break;
+
+      default:
+        console.error("Invalid role");
+        return;
+    }
+    
+    request$.subscribe({
       next: (response: LeaveResponseList) => {
         if (response.success && response.data) {
           this.pendingRequests = response.data;
