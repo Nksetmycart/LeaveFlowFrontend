@@ -153,7 +153,7 @@ export class Employees implements OnInit {
         this.showNotification(`Successfully deleted employee record for "${deletedName}".`, 'success');
       },
       error: (err) => {
-        console.error("Failed executing delete parameters execution pipeline checks:", err);
+        console.log("Failed executing delete parameters execution pipeline checks:", err);
         this.closeDeleteConfirmation();
         this.showNotification(`Failed to delete "${deletedName}". Please try again. error: ${err.error.message}`, 'error');
       }
