@@ -119,7 +119,7 @@ export class Holidays implements OnInit {
     const payload: UpdateHolidayDto = {
       name: this.editHolidayData.name,
       type: this.editHolidayData.type,
-      date: payloadDateObj.toISOString() // Formats back to standard "2026-07-17T19:51:25.514Z" matching updateDto requirement rules
+      date: this.editHolidayData.date // Formats back to standard "2026-07-17T19:51:25.514Z" matching updateDto requirement rules
     };
 
     // Assumes backend pipeline endpoint mirrors standard mapping signature: UpdateHoliday(id, payload)

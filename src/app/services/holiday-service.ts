@@ -39,7 +39,6 @@ export interface UpdateHolidayDto {
 export class HolidayService {
   private baseUrl = `${API_V0_BASE_URL}/Holiday`;
 
-
   constructor(private http: HttpClient) { }
 
   CreateHoliday(data: CreateHolidayDto): Observable<HolidayResponse> {

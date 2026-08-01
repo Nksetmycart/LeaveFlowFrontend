@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms'; // <-- Required for bidirectional select elements sync
+import { FormsModule } from '@angular/forms';
 import { EmployeeService, EmployeeResponseDto } from '../../services/employee-service';
 import { AuthService, Role } from '../../services/auth-service';
 
@@ -16,7 +16,6 @@ export class Employees implements OnInit {
   Role = Role;
   employeeList: EmployeeResponseDto[] = [];
 
-  // Pagination Active Parameters Trackers
   page = 1;
   pageSize = 10;
   totalItems = 0;
@@ -24,9 +23,13 @@ export class Employees implements OnInit {
 
   isLoading = false;
 
-  // Popup Modal Operational State Tracking Metrics Variables
   showConfirmationModal = false;
   employeeToDelete: EmployeeResponseDto | null = null;
+
+  // Notification Toast State Variables
+  notificationMessage: string | null = null;
+  notificationType: 'success' | 'error' | null = null;
+  private notificationTimeout: any = null;
 
   constructor(
     public authService: AuthService,
@@ -38,7 +41,19 @@ export class Employees implements OnInit {
     this.loadEmployees();
   }
 
-  // FIXED: Accepts backup pagination tokens to safely execute fallbacks if 404 is encountered
+  showNotification(message: string, type: 'success' | 'error'): void {
+    if (this.notificationTimeout) {
+      clearTimeout(this.notificationTimeout);
+    }
+    this.notificationMessage = message;
+    this.notificationType = type;
+
+    this.notificationTimeout = setTimeout(() => {
+      this.notificationMessage = null;
+      this.notificationType = null;
+    }, 4000);
+  }
+
   loadEmployees(backupPage: number = this.page, backupSize: number = this.pageSize): void {
     this.isLoading = true;
     
@@ -47,7 +62,6 @@ export class Employees implements OnInit {
         if (response.success) {
           this.employeeList = response.data || [];
           
-          // REINFORCED FALLBACK DETECTOR: Keeps navigation active even if meta summary values are missing
           if (response.totalCount !== undefined) {
             this.totalItems = response.totalCount;
           } else if (response.totalItems !== undefined) {
@@ -64,7 +78,6 @@ export class Employees implements OnInit {
         this.isLoading = false;
         console.error("Error pulling database personnel matrix profiles:", error);
         
-        // FIXED: Reverts the values at the frontend dashboard side upon interception of 404 states
         if (error?.status === 404) {
           console.warn(`Fetch aborted (404 Not Found). Reverting layout trackers to: Page ${backupPage}, Size ${backupSize}`);
           this.page = backupPage;
@@ -89,7 +102,6 @@ export class Employees implements OnInit {
     this.loadEmployees(prevPage, prevSize);
   }
 
-  // FIXED: Prevents evaluation loops locking layout on page 1 indefinitely
   get totalPages(): number {
     if (this.totalItems <= this.employeeList.length && this.page === 1) return 1;
     return Math.ceil(this.totalItems / this.pageSize) || 1;
@@ -116,7 +128,6 @@ export class Employees implements OnInit {
   }
 
   updateEmployee(employee: EmployeeResponseDto): void {
-    console.log('Opening administrative patch update matrix settings for:', employee.name);
     this.router.navigate(['/dashboard/employees/edit', employee.id]);
   }
 
@@ -132,15 +143,19 @@ export class Employees implements OnInit {
 
   confirmDelete(): void {
     if (!this.employeeToDelete) return;
+    const deletedName = this.employeeToDelete.name;
+
     this.employeeService.DeleteEmployeeById(this.employeeToDelete.id).subscribe({
       next: () => {
         this.employeeList = this.employeeList.filter(e => e.id !== this.employeeToDelete!.id);
         this.closeDeleteConfirmation();
         this.loadEmployees();
+        this.showNotification(`Successfully deleted employee record for "${deletedName}".`, 'success');
       },
       error: (err) => {
         console.error("Failed executing delete parameters execution pipeline checks:", err);
         this.closeDeleteConfirmation();
+        this.showNotification(`Failed to delete "${deletedName}". Please try again. error: ${err.error.message}`, 'error');
       }
     });
   }
