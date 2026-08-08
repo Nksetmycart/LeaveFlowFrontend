@@ -192,9 +192,13 @@ export class HomeComponent implements OnInit {
   getLeavePercentage(balance: any, used: any): number {
     const numBalance = parseFloat(balance) || 0;
     const numUsed = parseFloat(used) || 0;
-    const totalAllocated = numBalance + numUsed;
+    
+    // Clamp the active balance to 0 minimum if it drops into negative numbers
+    const validBalance = Math.max(0, numBalance);
+    const totalAllocated = validBalance + numUsed;
+
     if (totalAllocated === 0) return 0;
-    return (numBalance / totalAllocated) * 100;
+    return (validBalance / totalAllocated) * 100;
   }
 
   navigateToApplyLeave(): void {

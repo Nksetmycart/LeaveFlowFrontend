@@ -17,4 +17,6 @@ isModalOpen = false;
   toggleModal(isOpen: boolean): void {
     this.isModalOpen = isOpen;
   }
+
+  
 }
