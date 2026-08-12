@@ -31,7 +31,7 @@ interface ToastConfig {
   styleUrl: './apply-leave.css',
 })
 export class ApplyLeave implements OnInit {
-  currentDate: Date = new Date(2026, 6, 15); 
+  currentDate: Date = new Date(); 
   calendarCells: CalendarCell[] = [];
   weekDays: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   

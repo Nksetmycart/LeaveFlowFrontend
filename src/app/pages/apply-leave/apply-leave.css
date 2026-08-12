@@ -81,13 +81,15 @@
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  min-height: 105px;
-  padding: 10px;
+  aspect-ratio: 1 / 1;          /* Forces a strict 1:1 square size */
+  min-height: unset;            /* Removes conflicting min-height constraints */
+  padding: 8px;
   cursor: pointer;
   display: flex;
-  flex-column: column;
+  flex-direction: column;       /* Fixed syntax typo from flex-column: column */
   justify-content: space-between;
   transition: all 0.15s ease-in-out;
+  overflow: hidden;             /* Keeps contents neatly contained within the square */
 }
 
 .calendar-day-cell:hover:not(.selected-range-start):not(.selected-range-end) {
