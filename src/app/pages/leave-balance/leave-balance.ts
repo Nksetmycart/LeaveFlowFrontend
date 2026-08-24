@@ -15,6 +15,7 @@ interface DynamicEmployeeRecord {
   initials: string;
   role: string;
   balances: { [leaveType: string]: LeaveMetrics };
+  totalBalance: number;
 }
 
 @Component({
@@ -140,7 +141,8 @@ export class LeaveBalance implements OnInit {
         employeeName: empRecord.employeeName || 'Unknown Employee',
         initials: initials,
         role: empRecord.role || 'Personnel Team Member',
-        balances: {}
+        balances: {},
+        totalBalance: empRecord.totalBalance
       };
 
       if (Array.isArray(empRecord.leaveBalances)) {
