@@ -369,6 +369,14 @@ export class ApplyLeave implements OnInit {
     this.cdr.detectChanges();
   }
 
+  getSaturdayNumber(date: Date): number | null {
+    if (date.getDay() !== 6) {
+        return null; // Not Saturday
+    }
+
+    return Math.ceil(date.getDate() / 7);
+  }
+
   submitLeaveRequest(form: NgForm): void {
     if (form.invalid || !this.startDate || !this.endDate || (this.leaveRequestModel.reason?.length > 150)) {
       this.triggerToastNotification("Form input constraints validation failed.", false);
@@ -411,7 +419,9 @@ export class ApplyLeave implements OnInit {
       const checkTime = this.clearTime(adjustedStartDate);
       const isHoliday = this.holidaysCache.some(h => this.clearTime(new Date(h.date)) === checkTime);
 
-      if (dayOfWeek === 0 || dayOfWeek === 6 || isHoliday) {
+      const saturdayNumber = this.getSaturdayNumber(adjustedStartDate);        
+
+      if (dayOfWeek === 0 ||  (dayOfWeek === 6 && (saturdayNumber === 2 || saturdayNumber === 3 || saturdayNumber === 4)) || isHoliday) {
         this.isSubmitting = false;
         this.triggerToastNotification("Cannot apply leave on weekends or holidays as they are already off.", false);
         this.cdr.detectChanges();
