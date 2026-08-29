@@ -1,5 +1,5 @@
 <div class="container-fluid p-0 page-container animate-fade-in position-relative">
-  
+   
   <!-- TRUE FLOATING STATUS NOTIFICATION POPUP BANNER (Top Centered) -->
   <div *ngIf="notification.show" 
        class="custom-toast-notification text-white shadow-lg d-flex align-items-center gap-3 px-4 py-3 rounded-3"
@@ -43,7 +43,7 @@
     
     <!-- LEFT SIDE: Request Master Lists -->
     <div class="col-12 col-xl-7">
-      <div class="card border-0 shadow-sm rounded-4 p-4 bg-white min-h-card d-flex flex-column justify-content-between">
+      <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 bg-white min-h-card d-flex flex-column justify-content-between">
         
         <div>
           <!-- Pending Section Header -->
@@ -57,25 +57,25 @@
             <div class="d-flex flex-column gap-2">
               <div *ngFor="let req of pendingRequests" 
                    (click)="selectRequestItem(req, 'leave')"
-                   class="request-row border d-flex align-items-center justify-content-between p-3 rounded-3 transition-all" 
+                   class="request-row border d-flex align-items-center justify-content-between p-2 p-md-3 rounded-3 transition-all" 
                    [ngClass]="{ 'active-card shadow-sm border-primary': selectedRequest?.id === req.id, 'bg-white clickable-hover': selectedRequest?.id !== req.id }"
                    role="button">
                 <div class="d-flex align-items-center overflow-hidden">
-                  <div class="avatar-circle bg-primary-subtle text-primary fw-bold me-3 flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 42px; height: 42px;">
+                  <div class="avatar-circle bg-primary-subtle text-primary fw-bold me-2 me-md-3 flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 42px; height: 42px;">
                     {{ getInitials(req.employeeName) }}
                   </div>
                   <div class="overflow-hidden">
                     <div class="d-flex align-items-center gap-2 text-truncate">
                       <span class="fw-bold text-dark fs-6 text-truncate">{{ req.employeeName }}</span>
-                      <span class="badge bg-light text-secondary border text-uppercase" style="font-size: 0.6rem; letter-spacing: 0.05em;">Staff</span>
+                      <span class="badge bg-light text-secondary border text-uppercase d-none d-sm-inline-block" style="font-size: 0.6rem; letter-spacing: 0.05em;">Staff</span>
                     </div>
                     <small class="text-secondary d-block text-truncate mt-0.5">
                       {{ req.leaveType }} • {{ req.startDate | date:'yyyy-MM-dd' }} → {{ req.endDate | date:'yyyy-MM-dd' }} • {{ calculateLeaveDays(req.startDate, req.endDate, req.startSession, req.endSession) }} day(s)
                     </small>
                   </div>
                 </div>
-                <div class="d-flex align-items-center gap-3 flex-shrink-0 ms-2">
-                  <span class="badge bg-warning-subtle text-warning-emphasis px-2.5 py-1.5 rounded-pill fw-semibold text-uppercase style-badge-font">Pending</span>
+                <div class="d-flex align-items-center gap-2 gap-md-3 flex-shrink-0 ms-2">
+                  <span class="badge bg-warning-subtle text-warning-emphasis px-2 px-md-2.5 py-1.5 rounded-pill fw-semibold text-uppercase style-badge-font">Pending</span>
                   <i class="bi bi-chevron-right text-muted fs-7"></i>
                 </div>
               </div>
@@ -121,22 +121,27 @@
             <div class="d-flex flex-column gap-2 mt-3">
               <div *ngFor="let compOff of compOffRequests" 
                    (click)="selectRequestItem(compOff, 'compoff')"
-                   class="request-row border d-flex align-items-center justify-content-between p-3 rounded-3 transition-all" 
+                   class="request-row border d-flex align-items-center justify-content-between p-2 p-md-3 rounded-3 transition-all" 
                    [ngClass]="{ 'active-card shadow-sm border-primary': selectedRequest?.id === compOff.id, 'bg-white clickable-hover': selectedRequest?.id !== compOff.id }"
                    role="button">
                 <div class="d-flex align-items-center overflow-hidden">
-                  <div class="avatar-circle bg-light border text-muted fw-semibold me-3 flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 42px; height: 42px; font-size: 0.9rem;">
+                  <div class="avatar-circle bg-light border text-muted fw-semibold me-2 me-md-3 flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 42px; height: 42px; font-size: 0.9rem;">
                     {{ getInitials(compOff.employeeName) }}
                   </div>
                   <div class="overflow-hidden">
                     <span class="fw-semibold text-dark d-block text-truncate" style="font-size: 0.95rem;">{{ compOff.employeeName }} • {{ compOff.leaveType }}</span>
-                    <small class="text-secondary d-block font-monospace mt-0.5" style="font-size: 0.8rem;">
+                    <!-- Desktop Date Format -->
+                    <small class="text-secondary d-none d-sm-block font-monospace mt-0.5" style="font-size: 0.8rem;">
                       {{ compOff.startDate | date:'yyyy-MM-dd' }} → {{ compOff.endDate | date:'yyyy-MM-dd' }}
+                    </small>
+                    <!-- Mobile Date Format (08-aug...) -->
+                    <small class="text-secondary d-block d-sm-none font-monospace mt-0.5 text-lowercase" style="font-size: 0.8rem;">
+                      {{ compOff.startDate | date:'dd-MMM' }} → {{ compOff.endDate | date:'dd-MMM' }}
                     </small>
                   </div>
                 </div>
-                <div class="d-flex align-items-center gap-3 flex-shrink-0 ms-2">
-                  <span class="badge px-2.5 py-1.5 rounded-pill fw-semibold text-uppercase style-badge-font"
+                <div class="d-flex align-items-center gap-2 gap-md-3 flex-shrink-0 ms-2">
+                  <span class="badge px-2 px-md-2.5 py-1.5 rounded-pill fw-semibold text-uppercase style-badge-font"
                         [ngClass]="getStatusClass(compOff.status)">
                     {{ compOff.status }}
                   </span>
@@ -180,14 +185,14 @@
     <!-- RIGHT SIDE: Focused Context Detail View Component -->
     <div class="col-12 col-xl-5">
       
-      <div class="card border-0 shadow-sm rounded-4 p-4 bg-white d-flex flex-column h-auto" *ngIf="selectedRequest">
+      <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 bg-white d-flex flex-column h-auto" *ngIf="selectedRequest">
         
         <div class="d-flex align-items-center mb-4 border-bottom pb-3">
-          <div class="avatar-circle bg-primary-subtle text-primary fw-bold me-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 52px; height: 52px; font-size: 1.2rem;">
+          <div class="avatar-circle bg-primary-subtle text-primary fw-bold me-3 d-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="width: 52px; height: 52px; font-size: 1.2rem;">
             {{ getInitials(selectedRequest.employeeName) }}
           </div>
-          <div>
-            <h3 class="fw-bold text-dark fs-5 mb-0">{{ selectedRequest.employeeName }}</h3>
+          <div class="overflow-hidden">
+            <h3 class="fw-bold text-dark fs-5 mb-0 text-truncate">{{ selectedRequest.employeeName }}</h3>
             <!-- Dynamic Label based on request type -->
             <span class="text-muted text-uppercase fw-semibold" style="font-size: 0.72rem; letter-spacing: 0.05em;">
               {{ selectedRequestType === 'compoff' ? 'Comp Off Request' : 'Leave Request' }}
@@ -206,19 +211,19 @@
           </div>
           <div class="col-6">
             <label class="text-muted text-uppercase fw-bold d-block meta-label">Start</label>
-            <span class="fw-semibold text-dark fs-7 d-block font-monospace mt-0.5">{{ selectedRequest.startDate | date:'yyyy-MM-dd' }}</span>
+            <span class="fw-semibold text-dark fs-7 d-block font-monospace mt-0.5 text-truncate">{{ selectedRequest.startDate | date:'yyyy-MM-dd' }}</span>
           </div>
           <div class="col-6">
             <label class="text-muted text-uppercase fw-bold d-block meta-label">End</label>
-            <span class="fw-semibold text-dark fs-7 d-block font-monospace mt-0.5">{{ selectedRequest.endDate | date:'yyyy-MM-dd' }}</span>
+            <span class="fw-semibold text-dark fs-7 d-block font-monospace mt-0.5 text-truncate">{{ selectedRequest.endDate | date:'yyyy-MM-dd' }}</span>
           </div>
           <div class="col-6">
             <label class="text-muted text-uppercase fw-bold d-block meta-label">Applied</label>
-            <span class="fw-semibold text-dark fs-7 d-block font-monospace mt-0.5">{{ selectedRequest.submittedAt | date:'dd/MM/yyyy' }}</span>
+            <span class="fw-semibold text-dark fs-7 d-block font-monospace mt-0.5 text-truncate">{{ selectedRequest.submittedAt | date:'dd/MM/yyyy' }}</span>
           </div>
           <div class="col-6">
             <label class="text-muted text-uppercase fw-bold d-block meta-label">Sessions</label>
-            <span class="fw-semibold text-dark fs-8 d-block mt-0.5">
+            <span class="fw-semibold text-dark fs-8 d-block mt-0.5 text-truncate">
               {{ selectedRequest.startSession }} → {{ selectedRequest.endSession }}
             </span>
           </div>
@@ -267,7 +272,7 @@
       </div>
 
       <!-- Fallback Empty State -->
-      <div class="card border-0 shadow-sm rounded-4 p-5 bg-white text-center text-muted h-100 d-flex align-items-center justify-content-center" *ngIf="!selectedRequest">
+      <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white text-center text-muted h-100 d-flex align-items-center justify-content-center min-h-card-fallback" *ngIf="!selectedRequest">
         <i class="bi bi-inboxes display-4 text-secondary opacity-25 mb-2"></i>
         <h5 class="fw-bold text-dark fs-6 mb-1">No Selection Focus</h5>
         <p class="mb-0 fs-8 text-uppercase tracking-wide font-monospace">Choose an entry row from the queues to view audit specs profiles.</p>

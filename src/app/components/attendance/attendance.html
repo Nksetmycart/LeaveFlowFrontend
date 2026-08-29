@@ -5,7 +5,7 @@
        class="top-notification-toast shadow-lg rounded-4 p-3 mb-4 animate-slide-down d-flex align-items-center justify-content-between gap-3"
        [ngClass]="apiMessageType === 'success' ? 'bg-success text-white border-success' : 'bg-danger text-white border-danger'">
     <div class="d-flex align-items-center gap-3">
-      <div class="rounded-circle bg-white bg-opacity-25 p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; min-width: 40px;">
+      <div class="rounded-circle bg-white bg-opacity-25 p-2 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px; min-width: 40px;">
         <i class="bi" [ngClass]="apiMessageType === 'success' ? 'bi-check-circle-fill fs-5' : 'bi-exclamation-octagon-fill fs-5'"></i>
       </div>
       <div>
@@ -17,27 +17,27 @@
   </div>
 
   <!-- Header Title & Controls Section -->
-  <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+  <div class="d-flex justify-content-between align-items-lg-center flex-column flex-lg-row gap-3 mb-4">
     <div>
       <span class="text-muted text-uppercase fw-bold tracking-wider fs-7 d-block mb-1" style="font-size: 0.7rem; letter-spacing: 0.08em;">Attendance</span>
       <h1 class="fw-bold text-dark h2 mb-0">Your working days</h1>
     </div>
     
-    <!-- Dynamic Selection, Navigation & Submission Actions Panel -->
-    <div class="d-flex align-items-center flex-wrap gap-3">
+    <!-- Dynamic Selection & Submission Actions Panel -->
+    <div class="d-flex align-items-center flex-wrap gap-2 gap-md-3">
       
       <!-- Interactive Multi/Single Selection Mode Controls -->
       <div class="btn-group border rounded-3 p-1 bg-light shadow-none" role="group">
         <button 
           type="button" 
-          class="btn btn-sm rounded-2 fw-medium px-3 shadow-none border-0 transition-all"
+          class="btn btn-sm rounded-2 fw-medium px-2.5 px-md-3 shadow-none border-0 transition-all"
           [ngClass]="selectionMode === 'single' ? 'btn-white text-primary' : 'btn-transparent text-secondary'"
           (click)="setSelectionMode('single')">
           <i class="bi bi-cursor-fill me-1.5"></i> Single Select
         </button>
         <button 
           type="button" 
-          class="btn btn-sm rounded-2 fw-medium px-3 shadow-none border-0 transition-all"
+          class="btn btn-sm rounded-2 fw-medium px-2.5 px-md-3 shadow-none border-0 transition-all"
           [ngClass]="selectionMode === 'range' ? 'btn-white text-primary' : 'btn-transparent text-secondary'"
           (click)="setSelectionMode('range')">
           <i class="bi bi-calendar-range-fill me-1.5"></i> Range Select
@@ -60,41 +60,46 @@
         <i class="bi bi-cloud-arrow-up-fill me-2 fs-6"></i> Mark Attendance
       </button>
 
-      <!-- Calendar Month Navigation Controls -->
-      <div class="d-flex align-items-center gap-2 ms-2">
-        <button (click)="previousMonth()" class="btn btn-light btn-sm rounded-circle border shadow-none"><i class="bi bi-chevron-left"></i></button>
-        <span class="fw-bold text-dark fs-6 text-nowrap" style="min-width: 90px; text-align: center;">{{ currentMonthName }} {{ currentYear }}</span>
-        <button (click)="nextMonth()" class="btn btn-light btn-sm rounded-circle border shadow-none"><i class="bi bi-chevron-right"></i></button>
-      </div>
     </div>
   </div>
 
   <!-- Contextual Status Selection Toggle Strip Panel -->
   <div *ngIf="hasSelections()" class="card border-0 shadow-sm p-3 mb-4 rounded-4 border-start border-primary border-3 animate-fade-in" style="background-color: #f8fafc;">
-    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+    <div class="d-flex align-items-start align-items-md-center justify-content-between flex-column flex-md-row gap-3">
       <div class="d-flex align-items-center gap-2">
-        <i class="bi bi-info-circle-fill text-primary fs-5"></i>
-        <span class="fw-medium text-dark">Select the classification category to apply to your highlighted timeline:</span>
+        <i class="bi bi-info-circle-fill text-primary fs-5 flex-shrink-0"></i>
+        <span class="fw-medium text-dark fs-7">Select the classification category to apply to your highlighted timeline:</span>
       </div>
-      <div class="d-flex gap-2 flex-wrap">
-        <button type="button" class="btn btn-sm px-3 rounded-3 fw-semibold shadow-none border transition-all" [ngClass]="activeSelectedStatus === 'Working' ? 'btn-success text-white bg-success' : 'btn-light text-success bg-white'" (click)="updateSelectedDaysStatus('Working')"><i class="bi bi-briefcase-fill me-1"></i> Working</button>
-        <button type="button" class="btn btn-sm px-3 rounded-3 fw-semibold shadow-none border transition-all" [ngClass]="activeSelectedStatus === 'Leave' ? 'btn-danger text-white bg-danger' : 'btn-light text-danger bg-white'" (click)="updateSelectedDaysStatus('Leave')"><i class="bi bi-calendar-x-fill me-1"></i> Leave</button>
-        <button type="button" class="btn btn-sm px-3 rounded-3 fw-semibold shadow-none border transition-all" [ngClass]="activeSelectedStatus === 'FirstHalf' ? 'btn-warning text-dark bg-warning' : 'btn-light text-warning-emphasis bg-white'" (click)="updateSelectedDaysStatus('FirstHalf')"><i class="bi bi-hourglass-top me-1"></i> First Half</button>
-        <button type="button" class="btn btn-sm px-3 rounded-3 fw-semibold shadow-none border transition-all" [ngClass]="activeSelectedStatus === 'SecondHalf' ? 'btn-warning text-dark bg-warning' : 'btn-light text-warning-emphasis bg-white'" (click)="updateSelectedDaysStatus('SecondHalf')"><i class="bi bi-hourglass-bottom me-1"></i> Second Half</button>
+      <div class="d-flex gap-2 flex-wrap w-100 w-md-auto">
+        <button type="button" class="btn btn-sm px-3 rounded-3 fw-semibold shadow-none border transition-all flex-grow-1 flex-md-grow-0" [ngClass]="activeSelectedStatus === 'Working' ? 'btn-success text-white bg-success' : 'btn-light text-success bg-white'" (click)="updateSelectedDaysStatus('Working')"><i class="bi bi-briefcase-fill me-1"></i> Working</button>
+        <button type="button" class="btn btn-sm px-3 rounded-3 fw-semibold shadow-none border transition-all flex-grow-1 flex-md-grow-0" [ngClass]="activeSelectedStatus === 'Leave' ? 'btn-danger text-white bg-danger' : 'btn-light text-danger bg-white'" (click)="updateSelectedDaysStatus('Leave')"><i class="bi bi-calendar-x-fill me-1"></i> Leave</button>
+        <button type="button" class="btn btn-sm px-3 rounded-3 fw-semibold shadow-none border transition-all flex-grow-1 flex-md-grow-0" [ngClass]="activeSelectedStatus === 'FirstHalf' ? 'btn-warning text-dark bg-warning' : 'btn-light text-warning-emphasis bg-white'" (click)="updateSelectedDaysStatus('FirstHalf')"><i class="bi bi-hourglass-top me-1"></i> First Half</button>
+        <button type="button" class="btn btn-sm px-3 rounded-3 fw-semibold shadow-none border transition-all flex-grow-1 flex-md-grow-0" [ngClass]="activeSelectedStatus === 'SecondHalf' ? 'btn-warning text-dark bg-warning' : 'btn-light text-warning-emphasis bg-white'" (click)="updateSelectedDaysStatus('SecondHalf')"><i class="bi bi-hourglass-bottom me-1"></i> Second Half</button>
       </div>
     </div>
   </div>
 
   <!-- Operational Metrics Overview Strips Banner Row -->
   <div class="row g-3 mb-4">
-    <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm p-3 h-100 rounded-4 bg-white"><span class="text-muted text-uppercase fw-bold d-block mb-2 metrics-label">Working</span><h2 class="fw-bold text-primary mb-0 display-6">{{ stats.working }}</h2></div></div>
-    <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm p-3 h-100 rounded-4 bg-white"><span class="text-muted text-uppercase fw-bold d-block mb-2 metrics-label">Leave</span><h2 class="fw-bold text-indigo mb-0 display-6">{{ stats.leave }}</h2></div></div>
-    <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm p-3 h-100 rounded-4 bg-white"><span class="text-muted text-uppercase fw-bold d-block mb-2 metrics-label">Half Days</span><h2 class="fw-bold text-warning-emphasis mb-0 display-6">{{ stats.halfDays }}</h2></div></div>
-    <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm p-3 h-100 rounded-4 bg-white"><span class="text-muted text-uppercase fw-bold d-block mb-2 metrics-label">Total Hours</span><h2 class="fw-bold text-success mb-0 display-6">{{ stats.totalHours | number:'1.1-1' }}</h2></div></div>
+    <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm p-3 h-100 rounded-4 bg-white"><span class="text-muted text-uppercase fw-bold d-block mb-2 metrics-label">Working</span><h2 class="fw-bold text-primary mb-0 display-6 fs-4 fs-md-2">{{ stats.working }}</h2></div></div>
+    <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm p-3 h-100 rounded-4 bg-white"><span class="text-muted text-uppercase fw-bold d-block mb-2 metrics-label">Leave</span><h2 class="fw-bold text-indigo mb-0 display-6 fs-4 fs-md-2">{{ stats.leave }}</h2></div></div>
+    <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm p-3 h-100 rounded-4 bg-white"><span class="text-muted text-uppercase fw-bold d-block mb-2 metrics-label">Half Days</span><h2 class="fw-bold text-warning-emphasis mb-0 display-6 fs-4 fs-md-2">{{ stats.halfDays }}</h2></div></div>
+    <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm p-3 h-100 rounded-4 bg-white"><span class="text-muted text-uppercase fw-bold d-block mb-2 metrics-label">Total Hours</span><h2 class="fw-bold text-success mb-0 display-6 fs-4 fs-md-2">{{ stats.totalHours | number:'1.1-1' }}</h2></div></div>
   </div>
 
   <!-- Large Interactive Attendance Grid Area -->
-  <div class="card border-0 shadow-sm p-4 rounded-4 bg-white w-100">
+  <div class="card border-0 shadow-sm p-3 p-md-4 rounded-4 bg-white w-100">
+    
+    <!-- Calendar Month Navigation Controls (Placed directly above calendar) -->
+    <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+      <h5 class="fw-bold text-dark mb-0 fs-6">Calendar View</h5>
+      <div class="d-flex align-items-center gap-2">
+        <button (click)="previousMonth()" class="btn btn-light btn-sm rounded-circle border shadow-none"><i class="bi bi-chevron-left"></i></button>
+        <span class="fw-bold text-dark fs-6 text-nowrap" style="min-width: 100px; text-align: center;">{{ currentMonthName }} {{ currentYear }}</span>
+        <button (click)="nextMonth()" class="btn btn-light btn-sm rounded-circle border shadow-none"><i class="bi bi-chevron-right"></i></button>
+      </div>
+    </div>
+
     <div class="calendar-container">
       <div class="calendar-grid-header mb-2">
         <div class="text-muted text-center fw-semibold text-uppercase py-1" *ngFor="let day of weekDays">{{ day }}</div>
@@ -121,7 +126,7 @@
             </span>
           </div>
 
-          <div class="mt-2 w-100 d-flex flex-column gap-1">
+          <div class="mt-1 mt-md-2 w-100 d-flex flex-column gap-1">
             <span *ngIf="cell.isHoliday" class="holiday-label-chip text-truncate d-block" [title]="cell.holidayName">
               {{ cell.holidayName }}
             </span>

@@ -1,6 +1,7 @@
 /* Core Styling Matrix */
 .page-container {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
 }
 
 /* Master Rounding Avatar Configuration */
@@ -56,6 +57,16 @@
 
 .min-h-card {
   min-height: 520px;
+}
+
+.min-h-card-fallback {
+  min-height: 300px;
+}
+
+@media (min-width: 1200px) {
+  .min-h-card-fallback {
+    min-height: 520px;
+  }
 }
 
 .resize-none {
@@ -200,5 +211,26 @@ button[disabled] {
   to {
     top: 24px;
     opacity: 1;
+  }
+}
+
+/* Mobile & Tablet Specific Responsive Tweaks */
+@media (max-width: 768px) {
+  .custom-toast-notification {
+    width: 95%;
+    top: 16px;
+  }
+  
+  .page-container h1.h2 {
+    font-size: 1.5rem;
+  }
+  
+  .card {
+    border-radius: 1rem !important;
+  }
+  
+  .pagination .page-link {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.75rem;
   }
 }

@@ -1,11 +1,16 @@
 .sidebar-container {
   height: 100vh;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 1000;
 }
 
 /* Base custom link font size and tight structure */
 .nav-link {
   font-size: 0.925rem;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .nav-link.text-secondary {
@@ -29,6 +34,8 @@
   font-size: 1.1rem;
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 20px;
 }
 
 /* Margin helper fix */
@@ -39,4 +46,86 @@
 .custom-logout:hover {
   background-color: #fff5f5 !important;
   color: #c53030 !important;
+}
+
+/* Collapsed State Styles (Icons Only) */
+.sidebar-container.collapsed {
+  width: 72px !important;
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+
+.sidebar-container.collapsed .brand-text,
+.sidebar-container.collapsed .nav-text {
+  display: none !important;
+}
+
+.sidebar-container.collapsed .nav-link {
+  justify-content: center;
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+
+.sidebar-container.collapsed .nav-link i {
+  margin-right: 0 !important;
+}
+
+.sidebar-container.collapsed .border-bottom,
+.sidebar-container.collapsed .border-top {
+  justify-content: center;
+}
+
+.sidebar-container.collapsed .header-wrapper {
+  justify-content: center !important;
+}
+
+/* Responsive Auto-collapse on Tablet and Mobile Screens */
+@media (max-width: 991.98px) {
+  .sidebar-container {
+    width: 72px !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  
+  .sidebar-container:not(.collapsed) {
+    width: 230px !important;
+    max-width: 80vw !important;
+    padding: 1rem !important;
+    position: absolute;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebar-container:not(.collapsed) .header-wrapper {
+    justify-content: space-between !important;
+  }
+
+  .sidebar-container:not(.collapsed) .brand-text,
+  .sidebar-container:not(.collapsed) .nav-text {
+    display: inline !important;
+  }
+
+  .sidebar-container:not(.collapsed) .nav-link {
+    justify-content: flex-start;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .sidebar-container:not(.collapsed) .nav-link i {
+    margin-right: 1rem !important;
+  }
+
+  .sidebar-container.collapsed .brand-text,
+  .sidebar-container.collapsed .nav-text {
+    display: none !important;
+  }
+
+  .sidebar-container.collapsed .nav-link {
+    justify-content: center;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+
+  .sidebar-container.collapsed .nav-link i {
+    margin-right: 0 !important;
+  }
 }

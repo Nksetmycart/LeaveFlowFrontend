@@ -1,8 +1,8 @@
-<nav class="navbar navbar-expand bg-white border-bottom px-4 py-3 align-items-center w-100">
-  <div class="container-fluid p-0 d-flex justify-content-between align-items-center">
+<nav class="navbar navbar-expand bg-white border-bottom px-3 px-md-4 py-3 align-items-center w-100">
+  <div class="container-fluid p-0 d-flex justify-content-between align-items-center gap-2 gap-md-4">
     
     <!-- Left: Search Bar Box -->
-    <div class="search-container position-relative" style="width: 420px;">
+    <div class="search-container position-relative flex-grow-1 flex-md-grow-0" style="max-width: 420px;">
       <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary fs-5"></i>
       <input 
         type="text" 
@@ -11,7 +11,7 @@
     </div>
 
     <!-- Right: Actions & Profile Section -->
-    <div class="d-flex align-items-center gap-4">
+    <div class="d-flex align-items-center gap-2 gap-md-4 flex-shrink-0">
       
       <!-- Notification Bell with Notification Badge -->
       <button type="button" class="btn border-0 p-1 text-secondary position-relative icon-btn shadow-none">
@@ -21,12 +21,12 @@
         </span>
       </button>
 
-      <!-- Vertical Divider Line -->
-      <div class="vr text-black-50 opacity-25" style="height: 40px;"></div>
+      <!-- Vertical Divider Line (Hidden on Mobile) -->
+      <div class="vr text-black-50 opacity-25 d-none d-sm-block" style="height: 40px;"></div>
 
       <!-- User Profile Dropdown / Info -->
       <div class="d-flex align-items-center text-end user-profile-clickable" role="button">
-        <div class="me-3">
+        <div class="me-2 me-md-3 d-none d-sm-block">
           <span class="d-block fw-bold text-dark lh-sm fs-6">{{userModel.name}}</span>
           <span class="text-muted text-uppercase fw-semibold tracking-wider" style="font-size: 0.7rem; letter-spacing: 0.05em;">{{userModel.role}}</span>
         </div>

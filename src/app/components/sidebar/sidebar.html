@@ -1,99 +1,103 @@
-<div class="d-flex flex-column flex-shrink-0 p-3 bg-white border-end h-100 sidebar-container" style="width: 260px;">
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-white border-end h-100 sidebar-container" [class.collapsed]="isCollapsed" style="width: 260px;">
   
   <!-- Header / Logo Section (Reduced Height) -->
-  <div class="d-flex align-items-center pb-3 mb-2 border-bottom decoration-none">
-    <!-- App Logo Image from Public Folder -->
-    <div class="d-flex align-items-center justify-content-center rounded-3 me-2.5" style="width: 38px; height: 38px;">
-      <img src="LeaveFlowLogo.png" alt="LeaveFlow Logo" class="w-100 h-100 object-fit-contain rounded-3" />
+  <div class="d-flex align-items-center justify-content-between pb-3 mb-2 border-bottom decoration-none header-wrapper">
+    <!-- Logo & Brand (Hidden when collapsed to prevent collision) -->
+    <div class="d-flex align-items-center overflow-hidden brand-header-group" [class.d-none]="isCollapsed">
+      <div class="d-flex align-items-center justify-content-center rounded-3 me-2.5 flex-shrink-0" style="width: 38px; height: 38px;">
+        <img src="LeaveFlowLogo.png" alt="LeaveFlow Logo" class="w-100 h-100 object-fit-contain rounded-3" />
+      </div>
+      <div class="brand-text text-truncate">
+        <span class="fw-bold text-dark d-block lh-sm" style="font-size: 1.1rem;">Leave Flow</span>
+      </div>
     </div>
-    <!-- Brand Title -->
-    <div>
-      <span class="fw-bold text-dark d-block lh-sm" style="font-size: 1.1rem;">Leave Flow</span>
-    </div>
+    <!-- Mobile/Tablet Toggle Button -->
+    <button type="button" class="btn btn-sm btn-light border-0 d-lg-none p-1 shadow-none flex-shrink-0 toggle-btn" [class.mx-auto]="isCollapsed" (click)="toggleSidebar()">
+      <i class="bi fs-5" [ngClass]="isCollapsed ? 'bi-list' : 'bi-x-lg'"></i>
+    </button>
   </div>
 
   <!-- Main Navigation Links (Tightened Gaps) -->
-  <ul class="nav nav-pills flex-column mb-auto gap-1">
+  <ul class="nav nav-pills flex-column mb-auto gap-1 overflow-y-auto">
     <li class="nav-item">
-      <a [routerLink]="['/dashboard']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary">
-        <i class="bi bi-grid-1x2 me-3 fs-5-custom"></i>
-        <span class="fw-medium">Dashboard</span>
+      <a [routerLink]="['/dashboard']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary" [title]="isCollapsed ? 'Dashboard' : ''">
+        <i class="bi bi-grid-1x2 me-3 fs-5-custom flex-shrink-0"></i>
+        <span class="fw-medium nav-text">Dashboard</span>
       </a>
     </li>
     <li *ngIf="authService.hasRole(Role.SuperAdmin, Role.Manager, Role.HR)">
-      <a [routerLink]="['/dashboard',  'approval']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary">
-        <i class="bi bi-check2-square me-3 fs-5-custom"></i>
-        <span class="fw-medium">Approvals</span>
+      <a [routerLink]="['/dashboard', 'approval']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary" [title]="isCollapsed ? 'Approvals' : ''">
+        <i class="bi bi-check2-square me-3 fs-5-custom flex-shrink-0"></i>
+        <span class="fw-medium nav-text">Approvals</span>
       </a>
     </li>
      <li *ngIf="authService.hasRole(Role.SuperAdmin, Role.Manager, Role.HR)">
-      <a [routerLink]="['/dashboard',  'employees']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary">
-        <i class="bi bi-people me-3 fs-5-custom"></i>
-        <span class="fw-medium">Employees</span>
+      <a [routerLink]="['/dashboard', 'employees']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary" [title]="isCollapsed ? 'Employees' : ''">
+        <i class="bi bi-people me-3 fs-5-custom flex-shrink-0"></i>
+        <span class="fw-medium nav-text">Employees</span>
       </a>
     </li>
      <li *ngIf="authService.hasRole(Role.SuperAdmin, Role.HR)">
-      <a [routerLink]="['/dashboard',  'departments']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary">
-        <i class="bi bi-building me-3 fs-5-custom"></i>
-        <span class="fw-medium">Departments</span>
+      <a [routerLink]="['/dashboard', 'departments']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary" [title]="isCollapsed ? 'Departments' : ''">
+        <i class="bi bi-building me-3 fs-5-custom flex-shrink-0"></i>
+        <span class="fw-medium nav-text">Departments</span>
       </a>
     </li>
      <li *ngIf="authService.hasRole(Role.SuperAdmin, Role.HR)">
-      <a [routerLink]="['/dashboard',  'roles']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary">
-        <i class="bi bi-shield-lock me-3 fs-5-custom"></i>
-        <span class="fw-medium">Roles</span>
+      <a [routerLink]="['/dashboard', 'roles']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary" [title]="isCollapsed ? 'Roles' : ''">
+        <i class="bi bi-shield-lock me-3 fs-5-custom flex-shrink-0"></i>
+        <span class="fw-medium nav-text">Roles</span>
       </a>
     </li>
     <li>
-      <a [routerLink]="['/dashboard',  'leave-types']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary">
-        <i class="bi bi-sliders me-3 fs-5-custom"></i>
-        <span class="fw-medium">Leave Types</span>
+      <a [routerLink]="['/dashboard', 'leave-types']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary" [title]="isCollapsed ? 'Leave Types' : ''">
+        <i class="bi bi-sliders me-3 fs-5-custom flex-shrink-0"></i>
+        <span class="fw-medium nav-text">Leave Types</span>
       </a>
     </li>
      <li *ngIf="authService.hasRole(Role.SuperAdmin, Role.Manager, Role.HR)">
-      <a [routerLink]="['/dashboard',  'leave-balance']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary">
-        <i class="bi bi-wallet2 me-3 fs-5-custom"></i>
-        <span class="fw-medium">Leave Balance</span>
+      <a [routerLink]="['/dashboard', 'leave-balance']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary" [title]="isCollapsed ? 'Leave Balance' : ''">
+        <i class="bi bi-wallet2 me-3 fs-5-custom flex-shrink-0"></i>
+        <span class="fw-medium nav-text">Leave Balance</span>
       </a>
     </li>
-
     <li>
-      <a [routerLink]="['/dashboard',  'holidays']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary">
-        <i class="bi bi-tree me-3 fs-5-custom"></i>
-        <span class="fw-medium">Holidays</span>
+      <a [routerLink]="['/dashboard', 'holidays']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary" [title]="isCollapsed ? 'Holidays' : ''">
+        <i class="bi bi-tree me-3 fs-5-custom flex-shrink-0"></i>
+        <span class="fw-medium nav-text">Holidays</span>
       </a>
     </li>
     <li *ngIf="authService.hasRole(Role.Employee, Role.Manager, Role.HR)">
-      <a [routerLink]="['/dashboard',  'apply-leave']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary">
-        <i class="bi bi-clipboard-plus me-3 fs-5-custom"></i>
-        <span class="fw-medium">Apply Leave</span>
+      <a [routerLink]="['/dashboard', 'apply-leave']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary" [title]="isCollapsed ? 'Apply Leave' : ''">
+        <i class="bi bi-clipboard-plus me-3 fs-5-custom flex-shrink-0"></i>
+        <span class="fw-medium nav-text">Apply Leave</span>
       </a>
     </li>
     <li *ngIf="authService.hasRole(Role.Employee, Role.Manager, Role.HR)">
-      <a [routerLink]="['/dashboard',  'my-leaves']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary">
-        <i class="bi bi-list-check me-3 fs-5-custom"></i>
-        <span class="fw-medium">My Leaves</span>
+      <a [routerLink]="['/dashboard', 'my-leaves']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary" [title]="isCollapsed ? 'My Leaves' : ''">
+        <i class="bi bi-list-check me-3 fs-5-custom flex-shrink-0"></i>
+        <span class="fw-medium nav-text">My Leaves</span>
       </a>
     </li>
     <li *ngIf="authService.hasRole(Role.Employee, Role.Manager, Role.HR)">
-      <a [routerLink]="['/dashboard',  'my-comp-offs']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary">
-        <i class="bi bi-list-check me-3 fs-5-custom"></i>
-        <span class="fw-medium">My Comp Offs</span>
+      <a [routerLink]="['/dashboard', 'my-comp-offs']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary" [title]="isCollapsed ? 'My Comp Offs' : ''">
+        <i class="bi bi-list-check me-3 fs-5-custom flex-shrink-0"></i>
+        <span class="fw-medium nav-text">My Comp Offs</span>
       </a>
     </li>
     <li *ngIf="authService.hasRole(Role.Employee, Role.Manager, Role.HR)">
-      <a [routerLink]="['/dashboard',  'attendance']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary">
-        <i class="bi bi-calendar3 me-3 fs-5-custom"></i>
-        <span class="fw-medium">My Attendance</span>
+      <a [routerLink]="['/dashboard', 'attendance']" routerLinkActive="active" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary" [title]="isCollapsed ? 'My Attendance' : ''">
+        <i class="bi bi-calendar3 me-3 fs-5-custom flex-shrink-0"></i>
+        <span class="fw-medium nav-text">My Attendance</span>
       </a>
     </li>
   </ul>
 
   <!-- Footer Section (Reduced Height) -->
   <div class="pt-3 border-top">
-    <a (click)="onSignOut($event)" href="#" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary custom-logout">
-      <i class="bi bi-box-arrow-right me-3 fs-5-custom"></i>
-      <span class="fw-medium">Sign out</span>
+    <a (click)="onSignOut($event)" href="#" class="nav-link d-flex align-items-center py-2 px-3 rounded-3 text-secondary custom-logout" [title]="isCollapsed ? 'Sign out' : ''">
+      <i class="bi bi-box-arrow-right me-3 fs-5-custom flex-shrink-0"></i>
+      <span class="fw-medium nav-text">Sign out</span>
     </a>
   </div>
 </div>

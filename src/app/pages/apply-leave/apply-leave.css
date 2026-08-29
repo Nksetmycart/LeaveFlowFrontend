@@ -1,6 +1,7 @@
 /* Core Styling Matrix & Typography Foundations */
 .page-container {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
 }
 
 .meta-label {
@@ -74,22 +75,43 @@
 .calendar-grid-body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
+  gap: 4px;
+}
+
+@media (min-width: 768px) {
+  .calendar-grid-body {
+    gap: 8px;
+  }
 }
 
 .calendar-day-cell {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border-radius: 8px;
   aspect-ratio: 1 / 1;          /* Forces a strict 1:1 square size */
   min-height: unset;            /* Removes conflicting min-height constraints */
-  padding: 8px;
   cursor: pointer;
   display: flex;
-  flex-direction: column;       /* Fixed syntax typo from flex-column: column */
+  flex-direction: column;       
   justify-content: space-between;
   transition: all 0.15s ease-in-out;
   overflow: hidden;             /* Keeps contents neatly contained within the square */
+
+  /* Mobile touch responsiveness fix */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+@media (min-width: 768px) {
+  .calendar-day-cell {
+    border-radius: 12px;
+  }
+}
+
+/* Ensure inner elements don't intercept touch events */
+.calendar-day-cell * {
+  pointer-events: none;
 }
 
 .calendar-day-cell:hover:not(.selected-range-start):not(.selected-range-end) {
@@ -97,8 +119,14 @@
 }
 
 .day-number {
-  font-size: 0.92rem;
+  font-size: 0.78rem;
   color: #1a202c;
+}
+
+@media (min-width: 768px) {
+  .day-number {
+    font-size: 0.92rem;
+  }
 }
 
 /* Grayed out layout config rules for non-current month dates */
@@ -113,17 +141,25 @@
 
 /* Block Content Context Label Chips Base styling layout */
 .status-label-chip {
-  font-size: 0.58rem !important;
+  font-size: 0.52rem !important;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.02em;
-  padding: 3px 6px;
-  border-radius: 6px;
+  padding: 2px 4px;
+  border-radius: 4px;
   text-align: center;
 }
 
+@media (min-width: 768px) {
+  .status-label-chip {
+    font-size: 0.58rem !important;
+    padding: 3px 6px;
+    border-radius: 6px;
+  }
+}
+
 /* -------------------------------------------------------------------------- */
-/* Dynamic Date Selection Highlights States                                    */
+/* Dynamic Date Selection Highlights States                                   */
 /* -------------------------------------------------------------------------- */
 
 /* Range Cap Targets (Blue active blocks) */
@@ -176,8 +212,6 @@
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
-/* Add these layout definitions to your existing apply-leave.css style pool */
 
 .min-w-balance-box {
   min-width: 110px;

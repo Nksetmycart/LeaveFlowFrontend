@@ -18,6 +18,12 @@ export class Sidebar {
     private router: Router
   ) {}
 
+  isCollapsed = window.innerWidth < 992;;
+
+  toggleSidebar() {
+    this.isCollapsed = !this.isCollapsed;
+  }
+
   onSignOut(event: Event): void {
     event.preventDefault();
 
