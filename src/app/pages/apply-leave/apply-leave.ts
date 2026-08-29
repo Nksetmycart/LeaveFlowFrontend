@@ -332,7 +332,8 @@ export class ApplyLeave implements OnInit {
     while (curr <= last) {
       const checkTime = this.clearTime(curr);
       const dayOfWeek = curr.getDay();
-      const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+      const saturdayNumber = this.getSaturdayNumber(curr);
+      const isWeekend = (dayOfWeek === 0 || (dayOfWeek === 6 && (saturdayNumber === 2 || saturdayNumber === 3 || saturdayNumber === 4)));
       const isHoliday = this.holidaysCache.some(h => this.clearTime(new Date(h.date)) === checkTime);
 
       if (!isWeekend && !isHoliday) {
